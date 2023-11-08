@@ -6,6 +6,8 @@
     "insertStreet": "INSERT INTO direction.street (id_municipality, na_street) VALUES ($1, $2) RETURNING id_street",
     "selectDirectionByRoute": "SELECT na_street, na_municipality, na_city, na_state, na_country FROM route INNER JOIN",
     "selectCountry": "SELECT * FROM direction.country WHERE na_country = $1",
+    "updateMuni": "UPDATE direction.municipality SET na_municipality = $1 WHERE id_municipality = $2",
+    "updateStreet": "UPDATE direction.street SET na_street = $1 WHERE id_street = $2",
     "selectDirectionByLocal": "",
     "selectAllDirection": ""
 }

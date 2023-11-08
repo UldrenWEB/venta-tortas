@@ -86,8 +86,43 @@ class Control {
 
     }
 
-    deleteDirection = async () => {
+    //Se asume que ya que es un select el nombre sera igual a como esta en la base de datos
+    editMuniOrStreet = async ({ direction, oldName, newName }) => {
+        try {
+            const directionLC = direction.toLowerCase()
 
+            const obj = {
+                municipality: 'updateMuni',
+                street: 'updateStreet'
+            }
+
+
+            const verify = obj[directionLC] ? obj[directionLC] : false
+
+            if (!verify) return verify
+
+            const select = verify === 'municipality' ? ['selectMuni', 'id_municipality'] : ['selectStreet', 'id_street']
+
+            const [key, prop] = select
+
+            const id = iManagerPgHandler.returnByProp({
+                key: key,
+                params: [oldName],
+                prop: prop
+            })
+
+            if (!id) return false
+
+            const modified = iManagerPgHandler.execute({
+                key: verify,
+                params: [newName, result]
+            })
+
+            return modified;
+
+        } catch (error) {
+            return { error }
+        }
     }
 
     getCountries = ({ state = undefined, city = undefined }) => {
