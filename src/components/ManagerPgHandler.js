@@ -1,5 +1,5 @@
 'use strict'
-import PgHandler from "../models/PgHandler.js"
+import PgHandler from "./PgHandler.js"
 
 class ManagerPgHandler {
     constructor({ config, querys }) {
