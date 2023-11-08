@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import bcrypt from "bcrypt";
+import CryptoJS from "crypto-js";
 
 class CryptManager {
   /**
@@ -16,8 +17,8 @@ class CryptManager {
       const datoEncriptado = await bcrypt.hash(dato, saltRounds);
       return datoEncriptado;
     } catch (error) {
-      console.error(error)
-      return {error};
+      console.error(error);
+      return { error };
     }
   };
 
@@ -35,7 +36,7 @@ class CryptManager {
       const resultado = await bcrypt.compare(dato, hash);
       return resultado;
     } catch (error) {
-      return {error};
+      return { error };
     }
   };
 
@@ -49,8 +50,35 @@ class CryptManager {
   static generarRandom = ({ size = 8 } = {}) => {
     const random = crypto.randomBytes(8).toString("hex");
     const randomElement = random.slice(0, size);
-    
+
     return randomElement;
+  };
+
+  /**
+   * Encripta un dato utilizando el algoritmo AES y una llave predefinida.
+   * @param {Object} options - Opciones para la encriptación.
+   * @param {string} options.dato - El dato a encriptar.
+   * @param {string} options.keyUncrypt - La llave para encriptar el dato.
+   * @returns {string} El dato encriptado.
+   */
+  static encriptarConLlave = ({ dato, keyUncrypt }) => {
+    const ciphertext = CryptoJS.AES.encrypt(dato, keyUncrypt).toString();
+
+    return ciphertext;
+  };
+
+  /**
+   * Desencripta un dato utilizando el algoritmo AES y una llave predefinida.
+   * @param {Object} options - Opciones para la desencriptación.
+   * @param {string} options.datoEncriptado - El dato a desencriptar.
+   * @param {string} options.keyUncrypt - La llave para desencriptar el dato.
+   * @returns {string} El dato desencriptado.
+   */
+  static desencriptarConLlave = ({ datoEncriptado, keyUncrypt }) => {
+    const bytes = CryptoJS.AES.decrypt(datoEncriptado, keyUncrypt);
+    const originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+    return originalText;
   };
 }
 
