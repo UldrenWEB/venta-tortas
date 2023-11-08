@@ -1,0 +1,11 @@
+{
+    "insertCountry": "INSERT INTO direction.country (na_country) VALUES ($1) RETURNING id_country",
+    "insertState": "INSERT INTO direction.state (id_country, na_state) VALUES ($1, $2) RETURNING id_state",
+    "insertCity": "INSERT INTO direction.city (id_state, na_city) VALUES ($1, $2) RETURNING id_city",
+    "insertMuni": "INSERT INTO direction.municipality (id_city, na_municipality) VALUES ($1, $2) RETURNING id_municipality",
+    "insertStreet": "INSERT INTO direction.street (id_municipality, na_street) VALUES ($1, $2) RETURNING id_street",
+    "selectDirectionByRoute": "SELECT na_street, na_municipality, na_city, na_state, na_country FROM route INNER JOIN",
+    "selectCountry": "SELECT * FROM direction.country WHERE na_country = $1",
+    "selectDirectionByLocal": "",
+    "selectAllDirection": ""
+}

@@ -1,8 +1,95 @@
 'use strict'
-//Modificado por Uldren
+
 import { Country, State, City } from 'country-state-city'
+import iManagerPgHandler from '../../data/instances/iManagerPgHandler'
+
 
 class Control {
+
+    constructor() {
+
+
+    }
+
+    addDirection = async ({ nameCountry, nameState, nameCity, nameMuni, nameStreet }) => {
+        try {
+
+            const existCountry = iManagerPgHandler.returnByProp({
+                key: 'selectCountry',
+                params: [nameCountry],
+                prop: 'na_country'
+            })
+
+            if (!existCountry) return;
+
+            const country = existCountry ? { id: existCountry } : {
+                key: 'insertCountry',
+                params: [nameCountry]
+            }
+
+            const state = {
+                key: 'insertState',
+                params: [existCountry, nameState]
+            }
+
+            const city = {
+                key: 'insertCity',
+                params: [nameCity]
+            }
+
+            const muni = {
+                key: 'insertMuni',
+                params: [nameMuni]
+            }
+
+            const street = {
+                key: 'insertStreet',
+                params: [nameStreet]
+            }
+
+
+            const querys = [country, state, city, muni, street]
+
+            const result = await iManagerPgHandler.transaction({
+                querys: querys
+            })
+            if (result.command === 'COMMIT') return true
+        } catch (error) {
+            return { error }
+        }
+    }
+
+    addDirectionEspecified = async ({ direction, params }) => {
+        const directionLowerCase = direction.toLowerCase();
+
+        const obj = {
+            country: 'insertCountry',
+            state: 'insertState',
+            city: 'insertCity',
+            municipality: 'insertMuni',
+            street: 'insertStreet',
+        }
+
+        const verify = obj[directionLowerCase] ? obj[directionLowerCase] : false
+
+        if (!verify) return verify
+
+        try {
+            const result = await iManagerPgHandler.execute({
+                key: verify,
+                params: params
+            })
+            return result;
+        } catch (error) {
+            return { error }
+        }
+
+    }
+
+    deleteDirection = async () => {
+
+    }
+
     getCountries = ({ state = undefined, city = undefined }) => {
 
         return new Promise((resolve, reject) => {
@@ -49,7 +136,7 @@ class Control {
         })
     }
 
-    getStates = ({ country, state } = {}) => {
+    getStates = ({ country = undefined, state = undefined }) => {
         return new Promise((resolve, reject) => {
             try {
                 if (!country && !state) {
@@ -80,7 +167,7 @@ class Control {
 
     }
 
-    getCities({ country, state } = {}) {
+    getCities({ country = undefined, state = undefined }) {
 
         return new Promise((resolve, reject) => {
             try {

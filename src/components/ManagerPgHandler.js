@@ -16,6 +16,8 @@ class ManagerPgHandler {
                 params: params
             })
 
+            //Para comprobar:
+            console.log('Manager/ReturnByPropj ->', result[prop]);
             return result[prop] ? result[prop] : false
         } catch (error) {
             return { error }
@@ -43,6 +45,19 @@ class ManagerPgHandler {
                 params: params
             })
 
+            return result;
+        } catch (error) {
+            return { error }
+        }
+    }
+
+    transaction = async ({ querys = [] }) => {
+
+        try {
+            const result = await this.pgHandler.transaction({
+                objQuerys: this.querys,
+                querys: querys
+            })
             return result;
         } catch (error) {
             return { error }
