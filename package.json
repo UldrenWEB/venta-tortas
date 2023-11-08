@@ -18,9 +18,8 @@
     "apirest",
     "rest"
   ],
-  "author": "Enmanuel Colina",
+  "author": "Enmanuel Colina, Uldren Gedde",
   "license": "ISC",
-  "homepage": "https://github.com/enmarcm/TiendaTortas#readme",
   "dependencies": {
     "bcrypt": "5.1.1",
     "cors": "2.8.5",
