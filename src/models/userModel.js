@@ -2,7 +2,7 @@
  * @file Modelo de usuarios de la aplicación.
  * @name UserModel.js
  */
-import iPgHandler from "../data/instances/iPgHandler.js";
+import iManagerPgHandler from "../data/instances/iManagerPgHandler.js";
 import CryptManager from "../components/CryptManager.js";
 
 /**
@@ -21,12 +21,13 @@ class UserModel {
    */
   static verifyUser = async ({ user }) => {
     try {
-      const resultado = await iPgHandler.executeQuery({
-        key: "verifyUser",
+      const result = await iManagerPgHandler.returnByProp({
+        key: "selectUserUs",
         params: [user],
+        prop: 'id_user_web',
       });
 
-      return resultado.length > 0 ? resultado[0] : false;
+      return result
     } catch (error) {
       return { error };
     }
@@ -43,20 +44,20 @@ class UserModel {
    */
   static verifyBlock = async ({ user }) => {
     try {
-      const [resultBlock] = await iPgHandler.executeQuery({
-        key: "verifyBlock",
+      const isBlock = await iManagerPgHandler.returnByProp({
+        key: "selectUserUs",
         params: [user],
+        prop: 'bl_user_web',
+
       });
 
-      const [resultAttemps] = await iPgHandler.executeQuery({
-        key: "verifyAttempts",
+      const attemps = await iManagerPgHandler.returnByProp({
+        key: "selectUserUs",
         params: [user],
+        prop: 'at_user_web'
       });
 
-      const isBlock = resultBlock.bl_user_web;
-      const attempts = resultAttemps.at_user_web;
-
-      return isBlock || attempts <= 0 ? true : false;
+      return isBlock || attemps <= 0 ? true : false;
     } catch (error) {
       return { error };
     }
@@ -74,12 +75,11 @@ class UserModel {
    */
   static verifyPassword = async ({ user, password }) => {
     try {
-      const [resultPass] = await iPgHandler.executeQuery({
-        key: "selectPassUser",
+      const pass = await iManagerPgHandler.returnByProp({
+        key: "selectUserUs",
         params: [user],
+        prop: 'pa_user_web'
       });
-
-      const pass = resultPass.pa_user_web;
 
       const result = await CryptManager.compararEncriptado({
         dato: password.toString(),
@@ -103,7 +103,7 @@ class UserModel {
    */
   static restoreIntentos = async ({ user }) => {
     try {
-      const result = await iPgHandler.executeQuery({
+      const result = await iManagerPgHandler.execute({
         key: "restoreIntentos",
         params: [user],
       });
@@ -125,9 +125,10 @@ class UserModel {
    */
   static verifyIntentos = async ({ user }) => {
     try {
-      const [result] = await iPgHandler.executeQuery({
-        key: "verifyIntentos",
+      const [result] = await iManagerPgHandler.returnByProp({
+        key: "selectUserUs",
         params: [user],
+        prop: 'at_user_web'
       });
 
       return result;
@@ -150,7 +151,7 @@ class UserModel {
       const intentos = await this.verifyIntentos({ user });
       if (intentos.at_user_web <= 0) return;
 
-      const result = await iPgHandler.executeQuery({
+      const result = await iManagerPgHandler.execute({
         key: "disminuirIntentos",
         params: [user],
       });
@@ -171,7 +172,7 @@ class UserModel {
    */
   static desbloquear = async ({ user }) => {
     try {
-      const result = await iPgHandler.executeQuery({
+      const result = await iManagerPgHandler.execute({
         key: "desbloquear",
         params: [user],
       });
@@ -192,7 +193,7 @@ class UserModel {
    */
   static bloquear = async ({ user }) => {
     try {
-      const result = await iPgHandler.executeQuery({
+      const result = await iManagerPgHandler.execute({
         key: "bloquear",
         params: [user],
       });
@@ -216,7 +217,7 @@ class UserModel {
     try {
       if (!(await this.verifyPassword({ user, password }))) return false;
 
-      const [result] = await iPgHandler.executeQuery({
+      const result = await iManagerPgHandler.executeQuery({
         key: "getDataSession",
         params: [user],
       });
@@ -242,7 +243,7 @@ class UserModel {
    */
   static cargarPreguntas = async ({ user }) => {
     try {
-      const preguntas = await iPgHandler.executeQuery({
+      const preguntas = await iManagerPgHandler.executeQuery({
         key: "cargarTodasPreguntas",
         params: [user],
       });
@@ -263,7 +264,7 @@ class UserModel {
    */
   static obtenerRespuestas = async ({ index = [] }) => {
     try {
-      const respuestas = await iPgHandler.executeQuery({
+      const respuestas = await iManagerPgHandler.executeQuery({
         key: "obtenerDosRespuestas",
         params: [...index],
       });
@@ -286,7 +287,7 @@ class UserModel {
   static updatePassword = async ({ user, password }) => {
     try {
       const hashedPass = await CryptManager.encriptar({ dato: password });
-      const result = await iPgHandler.executeQuery({
+      const result = await iManagerPgHandler.execute({
         key: "updatePassword",
         params: [hashedPass, user],
       });
@@ -307,12 +308,13 @@ class UserModel {
    */
   static getMail = async ({ user }) => {
     try {
-      const [mail] = await iPgHandler.executeQuery({
-        key: "getMail",
+      const mail = await iManagerPgHandler.returnByProp({
+        key: "selectUserUs",
         params: [user],
+        prop: 'em_user_web'
       });
 
-      return mail.em_user_web;
+      return mail;
     } catch (error) {
       return { error };
     }
@@ -328,7 +330,7 @@ class UserModel {
    */
   static getProfiles = async ({ user }) => {
     try {
-      const profiles = await iPgHandler.executeQuery({
+      const profiles = await iManagerPgHandler.executeQuery({
         key: "getProfiles",
         params: [user],
       });
@@ -350,9 +352,10 @@ class UserModel {
    */
   static hasProfile = async ({ user, profile }) => {
     try {
-      const result = await iPgHandler.executeQuery({
+      const result = await iManagerPgHandler.returnByProp({
         key: "hasProfile",
         params: [user, profile],
+        prop: 'id_profile'
       });
       return result;
     } catch (error) {
@@ -377,7 +380,7 @@ class UserModel {
       for (const key in params) {
         parametros.push(params[key]);
       }
-      const result = await iPgHandler.executeQuery({
+      const result = await iManagerPgHandler.executeQuery({
         key: method,
         params: parametros,
       });

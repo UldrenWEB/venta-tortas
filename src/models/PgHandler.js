@@ -10,7 +10,7 @@ class PgHandler {
    * @param {Object} options.config - Configuración de la conexión a la base de datos.
    * @param {Object} options.querys - Consultas predefinidas para la base de datos.
    */
-  constructor({ config, querys }) {
+  constructor({ config }) {
     /**
      * Configuración de la conexión a la base de datos.
      * @type {Object}
@@ -32,30 +32,50 @@ class PgHandler {
    * Ejecuta una consulta a la base de datos.
    * @async
    * @param {Object} options - Opciones para la ejecución de la consulta.
-   * @param {string} options.key - Clave de la consulta predefinida a ejecutar.
+   * @param {string} options.query - Consulta a ejecutar.
    * @param {Array} [options.params=[]] - Parámetros para la consulta.
    * @returns {Promise<Array|Error>} - Resultado de la consulta o un objeto Error si ocurre un error.
    */
-  executeQuery = async ({ key, params = [] }) => {
+  executeQuery = async ({ query, params = undefined }) => {
     try {
-      const query = this.querys[key];
-      const { rows } = await this.pool.query(query, params);
+      const client = await this.#connect();
+
+      const { rows } = await client.query(query, params);
+      await this.#release(client);
+
       return rows;
     } catch (error) {
-      return {error};
+      return { error };
     }
   };
+
+  execute = async ({ query, params = undefined }) => {
+    const client = await this.#connect();
+    await client.query('BEGIN')
+
+    try {
+      const { rowCount } = await client.query(query, params);
+      await client.query('COMMIT')
+
+      return rowCount;
+    } catch (error) {
+      return { error }
+    } finally {
+      await this.#release(client)
+    }
+  }
+
 
   /**
    * Conecta a la base de datos.
    * @async
    * @returns {Promise<import('pg').Client>} - Cliente de la conexión a la base de datos.
    */
-  connect = async () => {
+  #connect = async () => {
     try {
       return await this.pool.connect();
     } catch (error) {
-      return {error};
+      return { error };
     }
   };
 
@@ -64,11 +84,11 @@ class PgHandler {
    * @async
    * @returns {Promise<void>}
    */
-  release = async () => {
+  #release = async (client) => {
     try {
-      await this.pool.release();
+      await client.release();
     } catch (error) {
-      return {error};
+      return { error };
     }
   };
 
@@ -79,8 +99,8 @@ class PgHandler {
    * @param {Array<String>} options.query - Un array de objetos que contienen la clave de la consulta y los parámetros de la consulta.
    * @returns {Promise<Object>} - Una promesa que se resuelve con el resultado de la transacción o se rechaza con un error.
    */
-  transaction = async ({querys = []}) => { 
-    const client = await this.connect();
+  transaction = async ({ querys = [] }) => {
+    const client = await this.#connect();
     try {
       await client.query("BEGIN");
       for (const elemento of querys) {
@@ -91,7 +111,7 @@ class PgHandler {
       return result;
     } catch (error) {
       await client.query("ROLLBACK");
-      return {error};
+      return { error };
     } finally {
       await client.release();
     }
