@@ -8,7 +8,6 @@ class PgHandler {
    * Crea una instancia de PgHandler.
    * @param {Object} options - Opciones para la configuración y consultas de la base de datos.
    * @param {Object} options.config - Configuración de la conexión a la base de datos.
-   * @param {Object} options.querys - Consultas predefinidas para la base de datos.
    */
   constructor({ config }) {
     /**
@@ -16,11 +15,6 @@ class PgHandler {
      * @type {Object}
      */
     this.config = config;
-    /**
-     * Consultas predefinidas para la base de datos.
-     * @type {Object}
-     */
-    this.querys = querys;
     /**
      * Pool de conexiones a la base de datos.
      * @type {Pool}
@@ -36,7 +30,7 @@ class PgHandler {
    * @param {Array} [options.params=[]] - Parámetros para la consulta.
    * @returns {Promise<Array|Error>} - Resultado de la consulta o un objeto Error si ocurre un error.
    */
-  executeQuery = async ({ query, params = undefined }) => {
+  executeQuery = async ({ query, params = [] }) => {
     try {
       const client = await this.#connect();
 
@@ -49,7 +43,7 @@ class PgHandler {
     }
   };
 
-  execute = async ({ query, params = undefined }) => {
+  execute = async ({ query, params = [] }) => {
     const client = await this.#connect();
     await client.query('BEGIN')
 

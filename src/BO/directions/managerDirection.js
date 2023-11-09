@@ -3,7 +3,7 @@
 import { Country, State, City } from "country-state-city";
 
 class ManagerDirection {
-  getCountries = ({ state = undefined, city = undefined }) => {
+  getCountries = ({ state, city }) => {
     return new Promise((resolve, reject) => {
       try {
         if (!state && !city) {
@@ -77,7 +77,7 @@ class ManagerDirection {
     });
   };
 
-  getCities({ country = undefined, state = undefined }) {
+  getCities({ country, state }) {
     return new Promise((resolve, reject) => {
       try {
         if (!country && !state) {
