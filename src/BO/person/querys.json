@@ -1,0 +1,12 @@
+{
+  "insertPerson": "INSERT INTO person.person (na_person, ln_person, nu_person, id_address) VALUES ($1, $2, $3, $4) RETURNING id_person",
+  "insertAddress": "INSERT INTO person.address (de_address, id_street) VALUES ($1, $2) RETURNING id_address",
+  "updatePerson": "UPDATE person.person SET na_person = $1, ln_person = $2, nu_person = $3, id_address = $4 WHERE id_person = $5",
+  "updateAddress": "UPDATE person.address SET de_address = $1, id_street = $2 WHERE id_address = $3",
+  "insertTypePerson": "INSERT INTO person.person_tp_person (id_tp_person, id_person) VALUES ($1, $2) RETURNING id_person",
+  "deletePersonTypePerson": "DELETE FROM person.person_tp_person WHERE id_person = $1",
+  "deletePerson": "DELETE FROM person.person WHERE id_person = $1",
+  "getAllAddress": "SELECT * FROM person.address",
+  "getAllPerson": "SELECT * FROM person.person",
+  "getAllPersonWithAddress": "SELECT p.id_person, p.na_person, p.ln_person, p.nu_person, a.de_address, s.na_street, m.na_municipality, c.na_city, st.na_state, co.na_country FROM person.person p INNER JOIN person.address a ON a.id_address = p.id_address INNER JOIN direction.street s ON s.id_street = a.id_street INNER JOIN direction.municipality m ON m.id_municipality = s.id_municipality INNER JOIN direction.city c ON c.id_city = m.id_city INNER JOIN direction.state st ON st.id_state = c.id_state INNER JOIN direction.country co ON co.id_country = st.id_country"
+}

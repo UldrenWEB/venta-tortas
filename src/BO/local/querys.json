@@ -1,16 +1,17 @@
 {
     "selectLocalByPerson": "SELECT lc.na_local, rt.de_route, st.na_street FROM local.local lc INNER JOIN local.person_local pl ON pl.id_local = lc.id_local INNER JOIN local.route rt ON rt.id_route = lc.id_route INNER JOIN local.street st ON st.id_street = rt.id_street WHERE pl.id_person = $1",
-    "selectRouteByLocal": "SELECT rt.de_route, st.na_street, mp.na_municipality FROM local.route rt INNER JOIN local.local lc ON lc.id_route = rt.id_route INNER JOIN local.street st ON st.id_street = rt.id_street INNER JOIN local.municipality mp ON mp.id_municipality = st.id_municipality WHERE lc.id_local = $1",
-    "selectAllRouteLocal": "SELECT lc.na_local, rt.de_route FROM local.route rt INNER JOIN local.local lc ON rt.id_route = lc.id_route",
     "selectLocalByRoute": "SELECT pn.na_person, pn.ln_person, lc.na_local FROM local.local lc INNER JOIN local.person_local pl ON pl.id_local = lc.id_local INNER JOIN local.route rt ON rt.id_route = lc.id_route INNER JOIN person.person pn ON pn.id_person = pl.id_person WHERE rt.id_route = $1",
+    "selectRouteByLocal": "SELECT rt.de_route, st.na_street, mp.na_municipality FROM local.route rt INNER JOIN local.local lc ON lc.id_route = rt.id_route INNER JOIN local.street st ON st.id_street = rt.id_street INNER JOIN local.municipality mp ON mp.id_municipality = st.id_municipality WHERE lc.id_local = $1",
     "selectAllLocal": "SELECT lc.id_local, lc.na_local FROM local.local lc",
     "selectAllRoute": "SELECT rt.id_route, rt.de_route FROM local.route rt",
+    "selectAllRouteAndLocal": "SELECT lc.na_local, rt.de_route FROM local.route rt INNER JOIN local.local lc ON rt.id_route = lc.id_route",
     "insertLocal": "INSERT INTO local.local (id_route, na_local) VALUES ($1, $2)",
     "insertRoute": "INSERT INTO local.route (id_street, de_route) VALUES ($1, $2)",
-    "deleteRoute": "DELETE FROM local.route WHERE id_route = $1",
-    "deleteLocal": "DELETE FROM local.local WHERE id_local = $1",
+    "insertPersonLocal": "INSERT INTO local.person_local (id_person, id_local) VALUES ($1, $2)",
+    "deleteRoute": "DELETE FROM local.route WHERE id_route = $1 RETURNING id_route",
+    "deleteLocal": "DELETE FROM local.local WHERE id_local = $1 RETURNING id_local",
     "deleteLocalByRoute": "DELETE FROM local.local WHERE id_route = $1",
+    "deletePersonLocalByLocal": "DELETE FROM local.person_local WHERE id_local = $1",
     "updateLocal": "UPDATE local.local SET na_local WHERE id_local = $1",
-    "updateRoute": "UPDATE local.route SET de_route WHERE id_route = $1",
-    "insertPersonLocal": "INSERT INTO local.person_local (id_person, id_local) VALUES ($1, $2)"
+    "updateRoute": "UPDATE local.route SET de_route WHERE id_route = $1"
 }

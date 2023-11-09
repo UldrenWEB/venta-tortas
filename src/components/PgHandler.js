@@ -45,20 +45,19 @@ class PgHandler {
 
   execute = async ({ query, params = [] }) => {
     const client = await this.#connect();
-    await client.query('BEGIN')
+    await client.query("BEGIN");
 
     try {
       const { rowCount } = await client.query(query, params);
-      await client.query('COMMIT')
+      await client.query("COMMIT");
 
       return rowCount;
     } catch (error) {
-      return { error }
+      return { error };
     } finally {
-      await this.#release(client)
+      await this.#release(client);
     }
-  }
-
+  };
 
   /**
    * Conecta a la base de datos.
@@ -113,7 +112,7 @@ class PgHandler {
         let finalParams;
 
         if (id) {
-          finalParams = [id, ...params]
+          finalParams = [id, ...params];
           continue;
         } else {
           finalParams = resultAlmacenado
@@ -128,6 +127,8 @@ class PgHandler {
             typeof rows === "object" && Object.keys(rows).length === 1
               ? Object.values(rows)[0]
               : rows;
+
+          insertResult = null;
         }
       }
       const result = await client.query("COMMIT");
