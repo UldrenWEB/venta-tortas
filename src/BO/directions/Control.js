@@ -142,7 +142,7 @@ class Control {
                 params: params
             })
 
-            return result ? result : false;
+            return result;
         } catch (error) {
             return { error }
         }
@@ -156,7 +156,7 @@ class Control {
                 params: [params]
             })
 
-            return result ? result : false;
+            return result;
         } catch (error) {
             return { error }
         }
@@ -182,7 +182,7 @@ class Control {
                 key: verify,
             })
 
-            return result ? result : false
+            return result;
         } catch (error) {
             return { error }
         }
