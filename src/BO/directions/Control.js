@@ -3,7 +3,7 @@
 import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 
 class Control {
-  constructor() {} //Todo: Se quita si no se usa pd: Ya quite el otro
+  constructor() { } //Todo: Se quita si no se usa pd: Ya quite el otro
 
   addDirection = async ({
     nameCountry,
@@ -24,28 +24,33 @@ class Control {
       const country = existCountry
         ? { id: existCountry }
         : {
-            key: "insertCountry",
-            params: [nameCountry],
-          };
+          key: "insertCountry",
+          params: [nameCountry],
+          insertResult: true
+        };
 
       const state = {
         key: "insertState",
         params: [existCountry, nameState],
+        insertResult: true
       };
 
       const city = {
         key: "insertCity",
         params: [nameCity],
+        insertResult: true
       };
 
       const muni = {
         key: "insertMuni",
         params: [nameMuni],
+        insertResult: true
       };
 
       const street = {
         key: "insertStreet",
         params: [nameStreet],
+        insertResult: true
       };
 
       const querys = [country, state, city, muni, street];
@@ -62,7 +67,6 @@ class Control {
   addDirectionEspecified = async ({ direction, params }) => {
     try {
       const directionLowerCase = direction.toLowerCase();
-
       const obj = {
         country: "insertCountry",
         state: "insertState",
@@ -71,12 +75,10 @@ class Control {
         street: "insertStreet",
       };
 
-      const verify = obj[directionLowerCase] ? obj[directionLowerCase] : false;
-
-      if (!verify) return verify;
+      if (!obj[directionLowerCase]) return false;
 
       const result = await iManagerPgHandler.execute({
-        key: verify,
+        key: obj[directionLowerCase],
         params: params,
       });
       return result;
@@ -96,7 +98,6 @@ class Control {
       };
 
       const verify = obj[directionLC] ? obj[directionLC] : false;
-
       if (!verify) return verify;
 
       const select =
@@ -127,22 +128,20 @@ class Control {
 
   getDirectionBy = async ({ by, params }) => {
     try {
-      let byLower = by.toLowerCase();
-
+      const byLower = by.toLowerCase();
       const obj = {
         route: "selectDirectionByRoute",
         local: "selectDirectionByLocal",
       };
-      const verify = obj[byLower] ? obj[byLower] : false;
 
-      if (!verify) return false;
+      if (!obj[byLower]) return false;
 
       const result = iManagerPgHandler.executeQuery({
-        key: verify,
+        key: obj[byLower],
         params: params,
       });
 
-      return result ? result : false;
+      return result;
     } catch (error) {
       return { error };
     }
@@ -156,7 +155,7 @@ class Control {
         params: [params],
       });
 
-      return result ? result : false;
+      return result;
     } catch (error) {
       return { error };
     }
@@ -176,14 +175,14 @@ getAll = async ({ direction }) => {
       street: "selectAllStreet",
     };
 
-    const verify = obj[directionLower] ? obj[directionLower] : false;
-    if (!verify) return false;
+
+    if (!obj[directionLower]) return false;
 
     const result = iManagerPgHandler.executeQuery({
-      key: verify,
+      key: obj[directionLower],
     });
 
-    return result ? result : false;
+    return result;
   } catch (error) {
     return { error };
   }

@@ -3,7 +3,7 @@
 import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 
 class Control {
-  constructor() {} //Todo: Se puede quitar tambien
+  constructor() { } //Todo: Se puede quitar tambien
 
   //?by Route || Person
   //?Params: idPerson || idRoute
@@ -15,11 +15,10 @@ class Control {
         route: "selectLocalByRoute",
       };
 
-      const verify = obj[byLower] ? obj[byLower] : false;
-      if (!verify) return verify;
+      if (!obj[byLower]) return false;
 
       const result = await iManagerPgHandler.executeQuery({
-        key: verify,
+        key: obj[byLower],
         params: params,
       });
 
@@ -53,11 +52,10 @@ class Control {
         localroute: "selectAllRouteAndLocal",
       };
 
-      const verify = obj[ofLower] ? obj[ofLower] : false;
-      if (!verify) return verify;
+      if (!obj[ofLower]) return false;
 
       const result = await iManagerPgHandler.executeQuery({
-        key: verify,
+        key: obj[ofLower],
       });
 
       return result;
@@ -75,11 +73,11 @@ class Control {
         local: "insertLocal",
         route: "insertRoute",
       };
-      const verify = obj[toLower] ? obj[toLower] : false;
-      if (!verify) return verify;
+
+      if (!obj[toLower]) return false;
 
       const modified = await iManagerPgHandler.execute({
-        key: verify,
+        key: obj[toLower],
         params: params,
       });
 
@@ -113,11 +111,10 @@ class Control {
         route: "updateRoute",
       };
 
-      const verify = obj[toLower] ? obj[toLower] : false;
-      if (!verify) return verify;
+      if (!obj[toLower]) return false;
 
       const modified = await iManagerPgHandler.execute({
-        key: verify,
+        key: obj[toLower],
         params: params,
       });
 
