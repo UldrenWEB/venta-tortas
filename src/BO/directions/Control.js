@@ -60,7 +60,7 @@ class Control {
       });
       if (result.command === "COMMIT") return true;
     } catch (error) {
-      return { error };
+      return { error: error.message };
     }
   };
 
@@ -83,7 +83,7 @@ class Control {
       });
       return result;
     } catch (error) {
-      return { error };
+      return { error: error.message };
     }
   };
 
@@ -122,7 +122,7 @@ class Control {
 
       return modified;
     } catch (error) {
-      return { error };
+      return { error: error.message };
     }
   };
 
@@ -143,7 +143,7 @@ class Control {
 
       return result;
     } catch (error) {
-      return { error };
+      return { error: error.message };
     }
   };
 
@@ -157,7 +157,7 @@ class Control {
 
       return result;
     } catch (error) {
-      return { error };
+      return { error: error.message };
     }
   };
 }
@@ -184,7 +184,7 @@ getAll = async ({ direction }) => {
 
     return result;
   } catch (error) {
-    return { error };
+    return { error: error.message };
   }
 };
 
