@@ -1,46 +1,57 @@
 'use strict'
 
 import io from 'socket.io-client';
-import FileReader from 'filereader';
+// import FileReader from 'filereader';
 
+
+//*Cuando se instacie se tienen que pasar los rooms y los namespace disponibles
 class Client {
-    constructor(url, token) {
-        this.socket = io(url, { query: { token } });
-        this.profile = null;
-        this.rooms = {}; // Almacena las salas
+    constructor({ url, rooms }) {
+        this.rooms = { ...rooms };
+        this.url = url;
+
     }
 
-    // Establece el perfil del cliente
-    setProfile(profile) {
-        this.profile = profile;
+    //Crea el socket del cliente que se conecto
+    createSocketClient = async (person) => {
+        const socket = io(this.url, {
+            user: person.user,
+            email: person.email,
+        })
+
+        return socket;
     }
 
-    // Valida el perfil y los métodos a los que tiene permiso
-    validateProfile() {
-        if (!this.profile) {
-            throw new Error('El perfil no está establecido');
+    joinRoom = (room) => {
+        if (!this.rooms[room]) {
+            throw new Error(`La sala ${room} no existe o no esta disponible`);
         }
-        // Lógica para validar el perfil y los métodos a los que tiene permiso
+        this.socket.emit('join_room', room)
     }
 
     // Envía un mensaje a un room dentro de un namespace
-    sendMessage({ room, message }) {
+    sendMessage = ({ socket, room, message }) => {
         if (!this.rooms[room]) {
-            throw new Error(`La sala ${room} no existe`);
+            throw new Error(`La sala ${room} no existe o no esta disponible`);
         }
-        this.socket.emit('message', { room, message });
+        socket.emit('message zone', { room, message });
+    }
+
+    sendMessageBroadcast = ({ socket, message }) => {
+        const namespace = 'myNamespace'
+        socket.emit('broadcast message', { namespace, message })
     }
 
     // Envía un mensaje directo a un usuario
-    sendDirectMessage(user, message) {
-        this.socket.emit('direct message', { user, message });
+    sendDirectMessage = ({ socket, message }) => {
+        socket.emit('direct message', { socket, message });
     }
 
     // Carga un archivo al servidor
-    uploadFile(file, type, target) {
+    uploadFile = ({ socket, file, destination, socket }) => {
         const reader = new FileReader();
         reader.onload = (evt) => {
-            this.socket.emit(type, { data: evt.target.result, target });
+            socket.emit('file', { file: evt.target.result, destination, socket });
         };
         reader.onerror = (error) => {
             console.log('Error al leer el archivo:', error);
@@ -49,22 +60,44 @@ class Client {
     }
 
     // Carga una imagen al servidor
-    loadImage(file, namespaceOrRoom) {
-        this.uploadFile(file, 'user image', namespaceOrRoom);
+    loadImage = ({ socket, file, namespaceOrRoom = 'myNamespace', socket = undefined }) => {
+        this.uploadFile({
+            socket: socket,
+            file: file,
+            destination: namespaceOrRoom,
+            socket: socket
+        });
     }
 
     // Carga una nota de voz al servidor
-    loadVoiceNote(file, namespaceOrRoom) {
-        this.uploadFile(file, 'voice note', namespaceOrRoom);
+    loadVoiceNote = ({ socket, file, namespaceOrRoom = 'myNamespace' }) => {
+        this.uploadFile({
+            socket: socket,
+            file: file,
+            destination: namespaceOrRoom,
+            socket: socket
+        });
     }
 
+    //*Escucha los diferentes eventos del cliente
+    //Todo: Esto se deberia iterar para poder escuchar los eventos segun los usuario que se vayan conectando
+    listenEvents = (socket) => {
+        socket.on('message', this.#eventMessage)
+    }
+
+    #eventMessage = (data) => {
+        //!Aqui es donde se reciben los mensajes
+        console.log(`Mesaje recibido`, data);
+    }
+
+
     // Desplaza automáticamente el contenedor de chat hasta el final
-    autoScroll(container) {
+    autoScroll = (container) => {
         container.scrollTop = container.scrollHeight;
     }
 
     //incia la grabacion de audio
-    startRecording() {
+    startRecording = () => {
         return new Promise((resolve, reject) => {
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(stream => {
@@ -89,7 +122,7 @@ class Client {
     }
 
     // Detiene la grabación de audio
-    stopRecording() {
+    stopRecording = () => {
         return new Promise((resolve, reject) => {
             if (!this.mediaRecorder) {
                 reject(new Error('No se está grabando audio'));
