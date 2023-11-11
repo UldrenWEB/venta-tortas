@@ -58,11 +58,32 @@ class seller {
     }
   };
 
+  asignLocalSeller = async ({ idSeller, local = [] }) => {
+    try {
+      const localData = [...local];
+      const querys = [];
+
+      for (const key of localData) {
+        const { idLocal } = key;
+        const localInfo = !idLocal
+          ? { key: "insertLocal", params: local, insertResult: true }
+          : { id: idLocal, insertResult: true };
+        const seller = { key: "asignLocalSeller", params: [idSeller] };
+
+        localData.push(localInfo, seller);
+      }
+      const result = await iManagerPgHandler.transaction({ querys });
+      return result;
+    } catch (error) {
+      return { error: error.message };
+    }
+  };
+
   //Permite crear tambien persona o local
-  createSeller = async ({ person, local }) => {
+  createSeller = async ({ person }) => {
     try {
       const { idPerson } = person;
-      const { idLocal } = local;
+      //   const { idLocal } = local;
 
       //   const personData = !idPerson
       //     ? await new personControl().createTo({
@@ -92,12 +113,10 @@ class seller {
         insertResult: true,
       };
 
-      const localData = !idLocal
-        ? { key: "insertLocal", params: local, insertResult: true }
-        : { id: idLocal, insertResult: true };
+      // Esto no va porque puede tener muchos locales
 
       const result = await iManagerPgHandler.transaction({
-        querys: [personData, localData, sellerData],
+        querys: [...personData, ...sellerData],
       });
 
       return result;
