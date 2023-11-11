@@ -1,8 +1,4 @@
 //TODO: RECORDAR VALIDAR CON SCHEMAS TODO LO QUE ENTRE POR PARAMETROS
-
-import personControl from "../person/control.js";
-import localControl from "../local/control.js";
-
 import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 class seller {
   getInfoSeller = async ({ idSeller }) => {
