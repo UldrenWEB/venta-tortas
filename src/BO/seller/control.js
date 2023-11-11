@@ -1,5 +1,8 @@
 //TODO: RECORDAR VALIDAR CON SCHEMAS TODO LO QUE ENTRE POR PARAMETROS
 
+import personControl from "../person/control.js";
+import localControl from "../local/control.js";
+
 import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 class seller {
   getInfoSeller = async ({ idSeller }) => {
@@ -15,7 +18,7 @@ class seller {
     }
   };
 
-  getSellerBy = async ({ option = "default", params }) => {
+  getSellersBy = async ({ option = "default", params }) => {
     try {
       const objLower = option.toLowerCase();
 
@@ -37,7 +40,7 @@ class seller {
 
       const result = await iManagerPgHandler.executeQuery({
         key: objQuerys[objLower],
-        params: params,
+        params,
       });
 
       return result;
@@ -51,6 +54,54 @@ class seller {
       const result = await iManagerPgHandler.executeQuery({
         key: "desactivateSeller",
         params: [idSeller],
+      });
+
+      return result;
+    } catch (error) {
+      return { error: error.message };
+    }
+  };
+
+  //Permite crear tambien persona o local
+  createSeller = async ({ person, local }) => {
+    try {
+      const { idPerson } = person;
+      const { idLocal } = local;
+
+      //   const personData = !idPerson
+      //     ? await new personControl().createTo({
+      //         option: "person",
+      //         params: person,
+      //       })
+      //     : idPerson;
+
+      //   const localData = !idLocal
+      //     ? await new localControl().insertTo({ to: "local", params: [local] })
+      //     : idLocal;
+
+      //   const seller = await iManagerPgHandler.executeQuery({
+      //     key: "insertSeller",
+      //     params: [personData, localData],
+      //   });
+
+      //TODO: ASI LO HAGO CON TRANSACTION, PERO SE PUEDEN USAR LOS METODOS CONVENCIONALES
+      //TODO: REVISAR QUE ABSOLUTAMENTE TODOS LOS INSERT RETORNEN EL DATO PRINCIPAL
+      const personData = !idPerson
+        ? { key: "insertPerson", params: person, insertResult: true }
+        : { id: idPerson, insertResult: true };
+
+      const sellerData = {
+        key: "insertSeller",
+        params: [personData],
+        insertResult: true,
+      };
+
+      const localData = !idLocal
+        ? { key: "insertLocal", params: local, insertResult: true }
+        : { id: idLocal, insertResult: true };
+
+      const result = await iManagerPgHandler.transaction({
+        querys: [personData, localData, sellerData],
       });
 
       return result;
