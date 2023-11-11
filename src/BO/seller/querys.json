@@ -17,5 +17,6 @@
   "paySeller": "INSERT INTO person.pay_person (id_person_se,am_pay_person) VALUES ($1, $2)",
   "seePendingPayments": "SELECT p.id_person id_seller, p.na_person, p.ln_person, bi.id_bill, SUM(ro.am_row) mo_pending FROM person.person p INNER JOIN billing.bill bi ON bi.id_person_se = p.id_person INNER JOIN billing.row ro ON ro.id_bill = bi.id_bill WHERE bi.id_status_bill = 2 GROUP BY p.id_person, bi.id_bill",
   "seePaymentsFromSellers": "SELECT p.id_person id_seller, p.na_person, p.ln_person, bi.id_bill, pa.id_pay, pa.am_pay FROM person.person p INNER JOIN billing.bill bi ON bi.id_person_se = p.id_person  INNER JOIN billing.pay pa ON pa.id_bill = bi.id_bill",
-  "seePaymentsToSellers": "SELECT p.id_person id_seller, p.na_person, p.ln_person, pp.id_pay_person, pp.am_pay_person FROM person.person p INNER JOIN person.pay_person pp ON p.id_person = pp.id_person_se INNER JOIN person.person_tp_person pt ON pt.id_person = p.id_person WHERE pt.id_tp_person = 1"
+  "seePaymentsToSellers": "SELECT p.id_person id_seller, p.na_person, p.ln_person, pp.id_pay_person, pp.am_pay_person FROM person.person p INNER JOIN person.pay_person pp ON p.id_person = pp.id_person_se INNER JOIN person.person_tp_person pt ON pt.id_person = p.id_person WHERE pt.id_tp_person = 1",
+  "seBillFromSeller": "SELECT bi.id_bill, bi.da_bill, SUM(ro.am_row) mo_bill, bi.id_person_se id_seller FROM billing.bill bi INNER JOIN billing.row ro ON ro.id_bill = bi.id_bill WHERE bi.id_person_se = $1 GROUP BY bi.id_bill"
 }

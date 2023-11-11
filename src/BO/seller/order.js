@@ -48,7 +48,18 @@ class order {
     }
   };
 
-  seeBillFromSeller = async ({ idSeller }) => {};
+  seeBillFromSeller = async ({ idSeller }) => {
+    try {
+      const result = await iManagerPgHandler.executeQuery({
+        key: "seeBillFromSeller",
+        params: [idSeller],
+      });
+
+      return result;
+    } catch (error) {
+      return { error: error.message };
+    }
+  };
 }
 
 export default order;
