@@ -76,10 +76,10 @@ class Client {
     }
 
     // Carga un archivo al servidor
-    #uploadFile = ({ user, file, destination }) => {
+    #uploadFile = ({ user, file, destination, isImg }) => {
         const reader = new FileReader();
         reader.onload = (evt) => {
-            socket.emit('file', { file: evt.target.result, destination, user });
+            socket.emit('file', { file: evt.target.result, destination, user, isImg });
             return true;
         };
         reader.onerror = (error) => {
@@ -94,7 +94,8 @@ class Client {
             socket: socket,
             file: file,
             destination: destination,
-            socket: socket
+            socket: socket,
+            typeFile: 'image'
         });
     }
 
@@ -104,7 +105,8 @@ class Client {
             socket: socket,
             file: file,
             destination: destination,
-            socket: socket
+            socket: socket,
+            typeFile: 'voice'
         });
     }
 
@@ -118,15 +120,22 @@ class Client {
 
     //Este metodo devuelve el tag de la imagen para que sea mostrada en el chat
     #validateImage = (data) => {
-        if (data instanceof File || data instanceof Blob) {
-            console.log('Es un archivo');
-            const imgTag = `<img src="${data}">`
+        const { file, typeFile } = data;
+        if (typeFile === 'image') {
+            console.log('Es una imagen');
+            const imgTag = `<img src="${file}">`
             return imgTag;
-        } else return false
+        } else if (typeFile === 'voice') {
+            console.log('Es un audio');
+            //Manejo de audio
+            return true;
+        } else {
+            return false;
+        }
     }
 
     #eventRoomMessage = (data) => {
-        const isImg = this.#validateImage();
+        const isImg = this.#validateImage(data);
         if (isImg) return isImg;
 
         console.log(`Mesaje recibido`, data);

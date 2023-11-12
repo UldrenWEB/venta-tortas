@@ -81,18 +81,18 @@ class SocketServer {
 
     //Enviar al namespace o algun room en especifico
     #manageFile = (data) => {
-        const { destination, file, user } = data;
+        const { destination, file, user, typeFile } = data;
         try {
             if (this.socketMap.get(user)) {
-                this.io.to(this.socketMap[socket]).emit('direct message', file)
+                this.io.to(this.socketMap[socket]).emit('direct message', { file, typeFile })
                 return true;
             }
             if (destination === this.namespace) {
-                this.io.to(destination).emit('general message', file);
+                this.io.to(destination).emit('general message', { file, typeFile });
                 return true;
             }
             if (this.rooms[destination]) {
-                this.io.to(destination).emit('room message', file)
+                this.io.to(destination).emit('room message', { file, typeFile })
                 return true;
             }
 
@@ -109,7 +109,7 @@ class SocketServer {
 
         if (this.namespace === namespace) {
             try {
-                return this.io.to(namespace).emit('broadcast message', message);
+                return this.io.to(namespace).emit('broadcast message', { message });
             } catch (error) {
                 return { error: error.message }
             }
@@ -123,7 +123,7 @@ class SocketServer {
         const { room, message } = data
         console.log(`Envias por el room ${room} el mensaje de ${message}`);
         try {
-            this.io.to(room).emit('room message', message);
+            this.io.to(room).emit('room message', { message });
         } catch (error) {
             return { error: error.message }
         }
@@ -138,7 +138,7 @@ class SocketServer {
         }
         console.log(`Envias al usuario ${user} el mensaje de ${message}`);
         try {
-            this.io.to(socketReceived).emit('direct message', message);
+            this.io.to(socketReceived).emit('direct message', { message });
             return true;
         } catch (error) {
             return { error: error.message }
