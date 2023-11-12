@@ -12,7 +12,7 @@ class SocketServer {
         this.socketMap = new Map();
         this.namespace = 'myNamespace';
         this.server = this.#createServer(app);
-        this.createNsp(this.io)
+        this.#createNsp(this.io)
     }
 
     #createServer = (app) => {
@@ -32,7 +32,7 @@ class SocketServer {
 
     getServer = () => this.server;
 
-    createNsp = (io) => {
+    #createNsp = (io) => {
         return io.of(this.namespace)
     }
 
