@@ -1,6 +1,37 @@
 import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 
 class payMethod {
+  getBy = async ({ option, params = [] }) => {
+    try {
+      const optionLower = option.toLowerCase();
+      const obj = {
+        banks: "getBank",
+        methodBanks: "getMethodBank",
+        methodOthers: "getMethodOther",
+        methodActives: "getMethodActive",
+        getAllBanks: "getAllBanks",
+        getAllMethodBanks: "getAllMethodBank",
+        getInactiveMethods: "getInactiveMethods",
+        getInactiveBanks: "getInactiveBanks",
+        getAllMethods: "getAllMethods",
+      };
+
+      if (!obj[optionLower]) return false;
+
+      const result = await iManagerPgHandler.execute({
+        key: obj[optionLower],
+        params,
+      });
+
+      return result;
+    } catch (error) {
+      console.error(
+        `Ocurrio un error en el metodo getBy: ${error.message} del objeto payMethods.js de billing`
+      );
+      return { error: error.message };
+    }
+  };
+
   //? option: - Bank - methodOther - methodBank
   //* Bank - params
   addTo = async ({ option, params }) => {
