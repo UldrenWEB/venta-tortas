@@ -1,80 +1,109 @@
 'use strict'
 
-import io from 'socket.io-client';
-// import FileReader from 'filereader';
-
-
+// import { io } from 'socket.io-client'
 //*Cuando se instacie se tienen que pasar los rooms y los namespace disponibles
 class Client {
-    constructor({ url, rooms }) {
-        this.rooms = { ...rooms };
+    constructor({ io, url, rooms }) {
+        this.rooms = rooms
         this.url = url;
-
+        this.io = io;
+        this.namespace = 'myNamespace';
     }
-
     //Crea el socket del cliente que se conecto
-    createSocketClient = async (person) => {
-        const socket = io(this.url, {
-            user: person.user,
-            email: person.email,
-        })
+    createSocketClient = (user) => {
+        try {
+            const socket = this.io(this.url, {
+                query: user
+            })
 
-        return socket;
+            return socket;
+        } catch (error) {
+            return { error: error.message }
+        }
+
+    }
+    joinNamespace = (socket) => {
+        try {
+            socket.emit('join_namespace', this.namespace);
+            return true;
+        } catch (error) {
+            return { error: error.message }
+        }
     }
 
-    joinRoom = (room) => {
+    joinRoom = (socket, room) => {
         if (!this.rooms[room]) {
-            throw new Error(`La sala ${room} no existe o no esta disponible`);
+            return false;
         }
-        this.socket.emit('join_room', room)
+        try {
+            socket.emit('join_room', room)
+            return true;
+        } catch (error) {
+            return { error: error.message }
+        }
     }
 
     // Envía un mensaje a un room dentro de un namespace
     sendMessage = ({ socket, room, message }) => {
         if (!this.rooms[room]) {
-            throw new Error(`La sala ${room} no existe o no esta disponible`);
+            return false;
         }
-        socket.emit('message zone', { room, message });
+        try {
+            socket.emit('message zone', { room, message });
+            return true;
+        } catch (error) {
+            return { error: error.message }
+        }
     }
 
     sendMessageBroadcast = ({ socket, message }) => {
-        const namespace = 'myNamespace'
-        socket.emit('broadcast message', { namespace, message })
+        try {
+            socket.emit('general message', { namespace: this.namespace, message })
+            return true;
+        } catch (error) {
+            return { error: error.message }
+        }
     }
 
     // Envía un mensaje directo a un usuario
-    sendDirectMessage = ({ socket, message }) => {
-        socket.emit('direct message', { socket, message });
+    sendDirectMessage = ({ socketEmit, user, message }) => {
+        try {
+            socketEmit.emit('direct message', { user, message });
+            return true;
+        } catch (error) {
+            return { error: error.message }
+        }
     }
 
     // Carga un archivo al servidor
-    uploadFile = ({ socket, file, destination, socket }) => {
+    #uploadFile = ({ user, file, destination }) => {
         const reader = new FileReader();
         reader.onload = (evt) => {
-            socket.emit('file', { file: evt.target.result, destination, socket });
+            socket.emit('file', { file: evt.target.result, destination, user });
+            return true;
         };
         reader.onerror = (error) => {
-            console.log('Error al leer el archivo:', error);
+            return { error: error.message }
         };
         reader.readAsDataURL(file);
     }
 
     // Carga una imagen al servidor
-    loadImage = ({ socket, file, namespaceOrRoom = 'myNamespace', socket = undefined }) => {
-        this.uploadFile({
+    loadImage = ({ socket, file, destination = this.namespace }) => {
+        this.#uploadFile({
             socket: socket,
             file: file,
-            destination: namespaceOrRoom,
+            destination: destination,
             socket: socket
         });
     }
 
     // Carga una nota de voz al servidor
-    loadVoiceNote = ({ socket, file, namespaceOrRoom = 'myNamespace' }) => {
-        this.uploadFile({
+    loadVoiceNote = ({ socket, file, destination = this.namespace }) => {
+        this.#uploadFile({
             socket: socket,
             file: file,
-            destination: namespaceOrRoom,
+            destination: destination,
             socket: socket
         });
     }
@@ -82,12 +111,40 @@ class Client {
     //*Escucha los diferentes eventos del cliente
     //Todo: Esto se deberia iterar para poder escuchar los eventos segun los usuario que se vayan conectando
     listenEvents = (socket) => {
-        socket.on('message', this.#eventMessage)
+        socket.on('room message', this.#eventRoomMessage);
+        socket.on('broadcast message', this.#eventBroadcastMessage);
+        socket.on('direct message', this.#eventDirectMessage);
     }
 
-    #eventMessage = (data) => {
-        //!Aqui es donde se reciben los mensajes
+    //Este metodo devuelve el tag de la imagen para que sea mostrada en el chat
+    #validateImage = (data) => {
+        if (data instanceof File || data instanceof Blob) {
+            console.log('Es un archivo');
+            const imgTag = `<img src="${data}">`
+            return imgTag;
+        } else return false
+    }
+
+    #eventRoomMessage = (data) => {
+        const isImg = this.#validateImage();
+        if (isImg) return isImg;
+
         console.log(`Mesaje recibido`, data);
+        alert(data)
+    }
+    #eventBroadcastMessage = (data) => {
+        const isImg = this.#validateImage();
+        if (isImg) return isImg;
+
+        console.log('Mensage recibido por namespace, el mensaje es: ', data);
+        alert(data)
+    }
+    #eventDirectMessage = (data) => {
+        const isImg = this.#validateImage();
+        if (isImg) return isImg;
+
+        console.log(`data`);
+        alert(data)
     }
 
 
@@ -142,6 +199,5 @@ class Client {
         });
     }
 }
-
 
 export default Client
