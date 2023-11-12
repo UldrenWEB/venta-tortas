@@ -99,20 +99,77 @@ class payMethod {
       };
 
       if (!obj[optionLower]) return false;
-      
+
       const result = await obj[optionLower]({ id });
-      return result
+      return result;
     } catch (error) {
-      console.error(`Ocurrio un error en el metodo deletePayMethod: ${error.message} del objeto payMethods.js de billing`)
-      return {error: error.message}
+      console.error(
+        `Ocurrio un error en el metodo deletePayMethod: ${error.message} del objeto payMethods.js de billing`
+      );
+      return { error: error.message };
     }
-  }
+  };
 
-  #deleteBank = async ({ id }) => { }
+  #deleteBank = async ({ idBank }) => {
+    try {
+      const deletePayBank = { key: "deletePayBank", params: [idBank] };
+      const deleteBank = { key: "deleteBank", params: [idBank] };
 
-  #deleteMethodOther = async ({ id }) => { }  
+      const querys = [...deletePayBank, ...deleteBank];
 
-  #deleteMethodBank = async ({ id }) => { }
+      const result = await iManagerPgHandler.transaction({ querys });
+
+      return result;
+    } catch (error) {
+      console.error(
+        `Ocurrio un error en el metodo privado #deleteBank: ${error.message} del objeto payMethods.js de billing`
+      );
+      return { error: error.message };
+    }
+  };
+
+  #deleteMethodOther = async ({ idOther }) => {
+    try {
+      const deletePayOther = { key: "deletePayOther", params: [idOther] };
+      const deleteMethodOther = { key: "deleteMethodOther", params: [idOther] };
+
+      const querys = [...deletePayOther, ...deleteMethodOther];
+
+      const result = await iManagerPgHandler.transaction({ querys });
+
+      return result;
+    } catch (error) {
+      console.error(
+        `Ocurrio un error en el metodo privado #deleteMethodOther: ${error.message} del objeto payMethods.js de billing`
+      );
+      return { error: error.message };
+    }
+  };
+
+  #deleteMethodBank = async ({ idMethodBank }) => {
+    try {
+      const deletePayBank = {
+        key: "deletePayBankFromMethod",
+        params: [idMethodBank],
+      };
+      const deleteMethodBank = {
+        key: "deleteMethodBank",
+        params: [idMethodBank],
+      };
+
+      const querys = [...deletePayBank, ...deleteMethodBank];
+
+      const result = await iManagerPgHandler.transaction({ querys });
+
+      return result;
+    } catch (error) {
+      console.error(
+        `Ocurrio un error en el metodo privado #deleteMethodBank: ${error.message} del objeto payMethods.js de billing`
+      );
+
+      return { error: error.message };
+    }
+  };
 }
 
 export default payMethod;
