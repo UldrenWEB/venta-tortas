@@ -41,6 +41,7 @@ class seller {
    * @param {Array} options.params
    * @returns {Promise<Array>}
    */
+  //TODO: Pendiente aqui ya que con el toLowerCase todas las letras seran minusculas por lo que nunca coincidira si una propiedad tiene mayusculas
   getSellersBy = async ({ option = "default", params }) => {
     try {
       const objLower = option.toLowerCase();
