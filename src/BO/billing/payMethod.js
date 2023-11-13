@@ -85,6 +85,7 @@ class payMethod {
     }
   };
 
+  //TODO: AQUI FALTA EL DEL BANCO QUE AHORA TAMBIEN TIENE ESTATUS 
   //? option: - methodBank - methodOther
   setStatusPayMethod = async ({ option, value }) => {
     try {
