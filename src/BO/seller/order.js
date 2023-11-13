@@ -8,6 +8,7 @@ class order {
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo asignTypePay: ${error.message} del objeto order.js de seller`)
       return { error: error.message };
     }
   };
@@ -21,6 +22,7 @@ class order {
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo paySeller: ${error.message} del objeto order.js de seller`)
       return { error: error.message };
     }
   };
@@ -44,6 +46,7 @@ class order {
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo seePayments: ${error.message} del objeto order.js de seller`)
       return { error: error.message };
     }
   };
@@ -57,6 +60,7 @@ class order {
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo seeBillFromSeller: ${error.message} del objeto order.js de seller`)
       return { error: error.message };
     }
   };

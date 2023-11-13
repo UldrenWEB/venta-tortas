@@ -1,5 +1,6 @@
 //TODO: RECORDAR VALIDAR CON SCHEMAS TODO LO QUE ENTRE POR PARAMETROS
 import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
+
 class seller {
   /**
    * Obtiene la información de un vendedor.
@@ -18,6 +19,7 @@ class seller {
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo getInfoSeller: ${error.message} del objeto control.js de seller`)
       return { error: error.message };
     }
   };
@@ -69,6 +71,7 @@ class seller {
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo getSellersBy: ${error.message} del objeto control.js de seller`)
       return { error: error.message };
     }
   };
@@ -89,6 +92,7 @@ class seller {
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo desactivateSeller: ${error.message} del objeto control.js de seller`)
       return { error: error.message };
     }
   };
@@ -118,13 +122,13 @@ class seller {
       const result = await iManagerPgHandler.transaction({ querys });
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo asignLocalSeller: ${error.message} del objeto control.js de seller`)
       return { error: error.message };
     }
   };
 
   /**
    * Crea un vendedor.
-   *
    * @async
    * @param {Object} options - Las opciones para crear el vendedor.
    * @param {Object} options.person - La información de la persona.
@@ -175,6 +179,7 @@ class seller {
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo createSeller: ${error.message} del objeto control.js de seller`)
       return { error: error.message };
     }
   };

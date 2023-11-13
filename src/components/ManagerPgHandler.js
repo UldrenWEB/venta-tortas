@@ -36,7 +36,8 @@ class ManagerPgHandler {
       console.log("Manager/ReturnByPropj ->", result[prop]);
       return result[prop] ? result[prop] : false;
     } catch (error) {
-      return { error };
+      console.error(`Ocurrio un error en el metodo returnByProp: ${error.message} del objeto ManagerPgHandler.js`);
+      return { error: error.message };
     }
   };
 
@@ -57,6 +58,7 @@ class ManagerPgHandler {
 
       return rowCount > 0;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo execute: ${error.message} del objeto ManagerPgHandler.js`)
       return { error };
     }
   };
@@ -77,6 +79,7 @@ class ManagerPgHandler {
 
       return result.length > 0 ? result : false;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo executeQuery: ${error.message} del objeto ManagerPgHandler.js`)
       return { error };
     }
   };
@@ -95,6 +98,7 @@ class ManagerPgHandler {
       });
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo transaction: ${error.message} del objeto ManagerPgHandler.js`)
       return { error };
     }
   };

@@ -27,6 +27,7 @@ class control {
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo createTo: ${error.message} del objeto control.js de persona`)
       return { error };
     }
   };
@@ -55,6 +56,7 @@ class control {
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo editTo: ${error.message} del objeto control.js de persona`)
       return { error };
     }
   };
@@ -83,6 +85,7 @@ class control {
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo getAllOf: ${error.message} del objeto control.js de persona`)
       return { error };
     }
   };
@@ -107,6 +110,7 @@ class control {
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo addTypePerson: ${error.message} del objeto control.js de persona`)
       return { error: error.message };
     }
   };
@@ -126,12 +130,20 @@ class control {
 
       const deletePerson = { key: "deletePerson", params: [idPerson] };
 
+      //TODO: Falta eliminar:
+      //* - Persona tipo de pago
+      //* - Pagos persona
+      //* - Bill de esa persona
+      //* - Local persona
+      //* - Persona usuario
+      //* - Asignaciones
       const querys = [deleteTypePerson, deletePerson];
 
       const result = iManagerPgHandler.transaction({ querys });
 
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo deletePerson: ${error.message} del objeto control.js de persona`)
       return { error: error.message };
     }
   };
@@ -172,6 +184,7 @@ class control {
       const result = await iManagerPgHandler.transaction({ querys });
       return result;
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo createPerson: ${error.message} del objeto control.js de persona`)
       return { error: error.message };
     }
   };
