@@ -127,35 +127,34 @@ class SocketServer {
       return { error: error.message }
     }
   }
-};
 
-#eventDirectMessage = (data) => {
-  const { user, message } = data;
-  const socketReceived = this.socketMap.get(user)
-  if (!socketReceived) {
-    console.log('No se encontro ese usuario');
-    return false;
+  #eventDirectMessage = (data) => {
+    const { user, message } = data;
+    const socketReceived = this.socketMap.get(user)
+    if (!socketReceived) {
+      console.log('No se encontro ese usuario');
+      return false;
+    }
+    console.log(`Envias al usuario ${user} el mensaje de ${message}`);
+    try {
+      this.io.to(socketReceived).emit('direct message', { message });
+      return true;
+    } catch (error) {
+      return { error: error.message }
+    }
   }
-  console.log(`Envias al usuario ${user} el mensaje de ${message}`);
-  try {
-    this.io.to(socketReceived).emit('direct message', { message });
-    return true;
-  } catch (error) {
-    return { error: error.message }
+  #onDisconnect = () => {
+    console.log('Un usuario se desconecto');
   }
-}
-#onDisconnect = () => {
-  console.log('Un usuario se desconecto');
-}
 
-#saveSocket = (socket) => {
-  const { user, profile } = socket.handshake.query;
-  const obj = {
-    id: socket.id,
-    profile: profile
+  #saveSocket = (socket) => {
+    const { user, profile } = socket.handshake.query;
+    const obj = {
+      id: socket.id,
+      profile: profile
+    }
+    this.socketMap.set(user, obj);
   }
-  this.socketMap.set(user, obj);
-}
 
 
 }
