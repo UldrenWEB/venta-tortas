@@ -7,9 +7,9 @@
 import express from "express";
 import picocolors from "picocolors";
 import iSession from "./data/instances/iSession.js";
-import { loginRouter, toProcessRouter, logoutRouter , setProfileRouter, changePasswordRouter, olvidoDatosRouter, homeRouter, desbloquearRouter} from "./routers/dispatcher.js";
-import { midCors, midNotFound , midAuthLogin, midNotProfile, midJson} from "./middlewares/middlewares.js";
-
+import { loginRouter, toProcessRouter, logoutRouter, setProfileRouter, changePasswordRouter, olvidoDatosRouter, homeRouter, desbloquearRouter } from "./routers/dispatcher.js";
+import { midCors, midNotFound, midAuthLogin, midNotProfile, midJson } from "./middlewares/middlewares.js";
+import SocketServer from "./components/SocketIO/server.js";
 /**
  * Puerto en el que se iniciará el servidor.
  * @type {number}
@@ -21,7 +21,6 @@ const PORT = process.env.PORT ?? 7878;
  * @type {express.Application}
  */
 const app = express();
-
 // Configuración de middlewares y routers.
 app.use(midCors);
 // app.use(cors({credentials: true, origin: true})); // <-- Se agrego para Navegador WEB

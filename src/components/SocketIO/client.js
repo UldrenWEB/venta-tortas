@@ -19,7 +19,10 @@ class Client {
   createSocketClient = (user) => {
     try {
       const socket = this.io(this.url, {
-        query: user
+        query: {
+          ...user,
+          timeStamp: 0
+        }
       })
 
       return socket;
@@ -153,21 +156,21 @@ class Client {
     if (isImg) this.#setImgTag(isImg);
 
     console.log(`Mesaje recibido`, data);
-    alert(data)
+    //Logica para mostrar mensajes recibidos por el usuario, se puedo pasar en el constructor los 3 diferentes container para poder llenarlos cuando se reciba un mensaje
   }
   #eventBroadcastMessage = (data) => {
     const isImg = this.#validateImage();
     if (isImg) this.#setImgTag(isImg);
 
     console.log('Mensage recibido por namespace, el mensaje es: ', data);
-    alert(data)
+    //Logica para mostrar mensajes recibidos por el usuario, se puedo pasar en el constructor los 3 diferentes container para poder llenarlos cuando se reciba un mensaje
   }
   #eventDirectMessage = (data) => {
     const isImg = this.#validateImage();
     if (isImg) this.#setImgTag(isImg);
 
     console.log(`data`);
-    alert(data)
+    //Logica para mostrar mensajes recibidos por el usuario, se puedo pasar en el constructor los 3 diferentes container para poder llenarlos cuando se reciba un mensaje
   }
   #setImgTag = (img) => {
     this.imgTag = img

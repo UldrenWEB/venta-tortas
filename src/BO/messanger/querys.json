@@ -15,5 +15,7 @@
     "updateMessage": "UPDATE message.message SET de_message WHERE id_message = $1 ",
     "updateTypeMessage": "UPDATE message.type_message SET de_type_message WHERE id_type_message = $1",
     "deleteMessage": "DELETE FROM message.message WHERE id_message = $1",
-    "deleteImage": "DELETE FROM message.image WHERE id_message = $1"
+    "deleteImage": "DELETE FROM message.image WHERE id_message = $1",
+    "selectMessageByTypeAndUserSe": "SELECT msg.da_message, usr.na_user, msg.de_message, img.de_image FROM message.message msg LEFT JOIN message.image img ON img.id_message = msg.id_message INNER JOIN message.type_message tpm ON tpm.id_type_message = msg.id_type_message INNER JOIN security.user usse ON usse.id_user = msg.id_user_se INNER JOIN security.user usr ON usr.id_user = msg.id_user_re WHERE (tpm.de_type_message = $1 AND usse.na_user = $2) OR (tpm.de_type_message = $1 AND usr.na_user = $2) ORDER BY msg.da_message",
+    "selectMessageByTypeAndUserSeTimeStamp": "SELECT msg.da_message, usr.na_user, msg.de_message, img.de_image FROM message.message msg LEFT JOIN message.image img ON img.id_message = msg.id_message INNER JOIN message.type_message tpm ON tpm.id_type_message = msg.id_type_message INNER JOIN security.user usse ON usse.id_user = msg.id_user_se INNER JOIN security.user usr ON usr.id_user = msg.id_user_re WHERE ((tpm.de_type_message = $1 AND usse.na_user = $2) OR (tpm.de_type_message = $1 AND usr.na_user = $2)) AND msg.ts_message > $3 ORDER BY msg.da_message"
 }

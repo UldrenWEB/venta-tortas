@@ -11,6 +11,7 @@ class Control {
                 date: 'selectMessageByDate',
                 rangedate: 'selectMessageByRangeDate',
                 type: 'selectMessageByTypeMessage',
+                typeanduser: 'selectMessageByTypeAndUserSe'
             }
             if (obj[optionLower]) return false;
             const result = await iManagerPgHandler.executeQuery({

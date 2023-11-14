@@ -3,7 +3,6 @@
 import { Server } from "socket.io"
 import { createServer } from 'node:http'
 import Message from '../../BO/messanger/control.js'
-import { type } from "node:os";
 
 
 //TODO: Aqui se manejaran los mensajes con sus rooms y nameSpaces
