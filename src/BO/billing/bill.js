@@ -1,36 +1,79 @@
-class bill{
-    createBill = async () =>{}
+import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 
-    //<--- Se llama cada vez que se hace un pago, ve si ya toda la factura esta pagada para cambiar el estatus
-    #verifyPayBill = ({ idBill }) => { }
+class bill {
+  createBill = async () => {};
 
+  //<--- Se llama cada vez que se hace un pago, ve si ya toda la factura esta pagada para cambiar el estatus
+  #verifyPayBill = async ({ idBill }) => {
+    try {
+      const montoTotal = Number(
+        await this.getInfo({ option: "totalBill", idBill })
+      );
+      const totalPays = Number(
+        await this.getInfo({ option: "totalPays", idBill })
+      );
 
-    /*Hay que especificar 
-    * @Metodo de pago
-    * Monto
-    * Id de la factura
-    * Id del usuario
-    */
-    payBill = async () => { }
+      return totalPays < montoTotal
+        ? false
+        : await this.#changeStatusBill({ idBill, status: "Pagada" });
+    } catch (error) {
+      console.error(
+        `Ocurrio un error en el metodo #verifyPayBill: ${error.message} del objeto bill.js de billing`
+      );
+      return { error: error.message };
+    }
+  };
 
-    #payBank = async () => { }
+  /*Hay que especificar
+   * @Metodo de pago
+   * Monto
+   * Id de la factura
+   * Id del usuario
+   */
+  payBill = async () => {};
 
-    #payOther = async () => { }
+  #payBank = async () => {};
 
-    calculateTotal = async ({ idBill }) => { }
+  #payOther = async () => {};
 
-    #changeStatusBill = ({ idBill, status }) => { }
+  calculateTotal = async ({ idBill }) => {};
 
-    deleteBill = async () =>{}
+  #changeStatusBill = async ({ idBill, status }) => {};
 
-    seeProductsBill = () => { }
+  deleteBill = async () => {};
 
-    seeBillsBy = async () =>{}
+  seeProductsBill = () => {};
 
-    addRowBill = async () => { }
+  seeBillsBy = async () => {};
 
-    deleteRowBill = async () => { }
+  addRowBill = async () => {};
 
+  deleteRowBill = async () => {};
+
+  //! Esta va a obtener la deuda total ademas del monto total por factura
+  getTotal = async () => {};
+
+  getInfo = async ({ option, idBill }) => {
+    try {
+      const options = {
+        totalBill: "totalBill",
+        totalPays: "totalPays",
+        totalDebt: "totalDebt",
+      };
+
+      if (!options[option]) return false;
+
+      const result = await iManagerPgHandler.execute({
+        key: options[option],
+        params: [idBill],
+      });
+
+      return result;
+    } catch (error) {
+        console.error(`Ocurrio un error en el metodo getInfo: ${error.message} del objeto bill.js de billing`);
+        return {error: error.message}
+    }
+  };
 }
 
-export default bill
+export default bill;
