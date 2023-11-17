@@ -2,7 +2,7 @@
   "name": "gestion-tortas",
   "version": "1.0.0",
   "description": "Sistema encargado de llevar a cabo una gestion de una tienda de tortas con vendedores",
-  "main": "./src/app.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
