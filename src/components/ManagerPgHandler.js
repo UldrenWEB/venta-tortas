@@ -27,7 +27,7 @@ class ManagerPgHandler {
    * @returns {Promise<String>} - Una promesa que resuelve con la propiedad del resultado o un error.
    */
   returnByProp = async ({ key, params, prop }) => {
-  
+
     try {
       let [result] = await this.pgHandler.executeQuery({
         query: this.query[key],

@@ -174,10 +174,10 @@ class LoginController {
       return iSession.createSesion({ req, infoUser })
         ? res.redirect(303, "/setProfile")
         : res
-            .status(400)
-            .json({
-              error: `No se pudo crear la sesión para ${infoUser.user}`,
-            });
+          .status(400)
+          .json({
+            error: `No se pudo crear la sesión para ${infoUser.user}`,
+          });
     } catch (error) {
       return { error };
     }
