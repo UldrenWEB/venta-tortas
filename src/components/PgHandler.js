@@ -103,7 +103,7 @@ class PgHandler {
    * const result = await transaction({querys});
    */
   transaction = async ({ objQuerys, querys = [] }) => {
-    const client = await this.connect();
+    const client = await this.#connect();
     let resultAlmacenado;
     try {
       await client.query("BEGIN");
