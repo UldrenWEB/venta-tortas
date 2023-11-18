@@ -10,7 +10,7 @@
   "disminuirIntentos": "UPDATE security.user SET at_user = at_user - 1 WHERE na_user = $1",
   "verifyIntentos": "SELECT at_user FROM security.user WHERE na_user = $1",
   "bloquear": "UPDATE security.user SET bl_user = true, at_user = 0 WHERE na_user = $1",
-  "getDataSession": "SELECT uw.id_user, uw.na_user, uw.em_user FROM security.user uw WHERE uw.na_user = $1",
+  "getDataSession": "SELECT uw.id_user, uw.na_user, uw.ma_user FROM security.user uw WHERE uw.na_user = $1",
   "obtenerPermisos": "SELECT p.de_profile profile, m.na_method area, o.na_object object, mo.na_module module FROM security.permission pe INNER JOIN security.profile p ON p.id_profile = pe.id_profile INNER JOIN security.method m ON m.id_method = pe.id_method INNER JOIN security.object o ON o.id_object = m.id_object INNER JOIN security.module mo ON mo.id_module = o.id_module",
   "addUser": "INSERT INTO security.user (na_user, pw_user, ma_user, im_user, id_person, id_status_user) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id_user",
   "seeUser": "SELECT na_user as user, ma_user as email FROM security.user WHERE user = $1",

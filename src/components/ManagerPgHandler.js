@@ -15,7 +15,6 @@ class ManagerPgHandler {
     this.pgHandler = new PgHandler({ config });
 
     this.querys = querys;
-
   }
 
   /**
@@ -30,12 +29,12 @@ class ManagerPgHandler {
 
     try {
       let [result] = await this.pgHandler.executeQuery({
-        query: this.query[key],
-        params: params,
+        query: this.querys[key],
+        params,
       });
 
       //Para comprobar:
-      console.log("Manager/ReturnByPropj ->", result[prop]);
+      // console.log("Manager/ReturnByPropj ->", result[prop]);
       return result[prop] ? result[prop] : false;
     } catch (error) {
       console.error(`Ocurrio un error en el metodo returnByProp: ${error.message} del objeto ManagerPgHandler.js`);
