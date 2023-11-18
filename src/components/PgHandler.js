@@ -20,7 +20,6 @@ class PgHandler {
      * @type {Pool}
      */
     this.pool = new Pool(this.config);
-    console.log(`Aqui esta ${this.pool}`)
   }
 
   /**

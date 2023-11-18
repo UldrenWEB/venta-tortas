@@ -15,6 +15,7 @@ class ManagerPgHandler {
     this.pgHandler = new PgHandler({ config });
 
     this.querys = querys;
+
   }
 
   /**

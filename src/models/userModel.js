@@ -386,7 +386,7 @@ class UserModel {
       });
       return result;
     } catch (error) {
-      return { error };
+      return { error: error.message };
     }
   };
 }

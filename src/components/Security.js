@@ -55,14 +55,13 @@ class Security {
         method: "obtenerPermisos",
         params: [],
       });
-
-      
+ 
       // Crea el mapa de permisos
       this.#putPermissionsMap({ permisos });
 
-      console.log(this.permissions)
       return;
     } catch (error) {
+      console.log('si error')
       return { error };
     }
   };
@@ -112,6 +111,7 @@ class Security {
       const porArea = result[profile];
       this.permissions.set(profile, porArea);
     }
+
     return;
   };
 
