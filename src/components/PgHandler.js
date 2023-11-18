@@ -20,6 +20,7 @@ class PgHandler {
      * @type {Pool}
      */
     this.pool = new Pool(this.config);
+    console.log(`Aqui esta ${this.pool}`)
   }
 
   /**
@@ -66,9 +67,10 @@ class PgHandler {
    */
   #connect = async () => {
     try {
+      console.log('si')
       return await this.pool.connect();
     } catch (error) {
-      return { error };
+      return { error: error.message};
     }
   };
 
