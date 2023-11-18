@@ -57,6 +57,7 @@ class UserModel {
         prop: 'at_user'
       });
 
+
       return isBlock || attemps <= 0 ? true : false;
     } catch (error) {
       return { error };
