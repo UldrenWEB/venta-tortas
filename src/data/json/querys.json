@@ -28,5 +28,5 @@
   "obtenerDosRespuestas": "SELECT ans.de_answer FROM security.answer ans INNER JOIN security.question quest ON  quest.id_question = ans.id_question WHERE quest.id_question IN ($1,$2)",
   "updatePassword": "UPDATE security.user SET pw_user = $1 WHERE na_user = $2",
   "getMail": "SELECT em_user FROM security.user WHERE na_user = $1",
-  "desbloquear": "UPDATE user_web SET bl_user = false, at_user = 3 WHERE na_user = $1"
+  "desbloquear": "UPDATE security.user SET bl_user = false, at_user = 3 WHERE na_user = $1"
 }
