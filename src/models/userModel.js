@@ -24,7 +24,7 @@ class UserModel {
       const result = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'id_user_web',
+        prop: 'id_user',
       });
 
       return result
@@ -47,14 +47,14 @@ class UserModel {
       const isBlock = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'bl_user_web',
+        prop: 'bl_user',
 
       });
 
       const attemps = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'at_user_web'
+        prop: 'at_user'
       });
 
       return isBlock || attemps <= 0 ? true : false;
@@ -78,7 +78,7 @@ class UserModel {
       const pass = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'pa_user_web'
+        prop: 'pw_user'
       });
 
       const result = await CryptManager.compararEncriptado({
@@ -128,7 +128,7 @@ class UserModel {
       const [result] = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'at_user_web'
+        prop: 'at_user'
       });
 
       return result;
@@ -149,7 +149,7 @@ class UserModel {
   static disminuirIntentos = async ({ user }) => {
     try {
       const intentos = await this.verifyIntentos({ user });
-      if (intentos.at_user_web <= 0) return;
+      if (intentos.at_user <= 0) return;
 
       const result = await iManagerPgHandler.execute({
         key: "disminuirIntentos",
@@ -222,9 +222,9 @@ class UserModel {
         params: [user],
       });
       const data = {
-        idUser: result.id_user_web,
-        user: result.us_user_web,
-        email: result.em_user_web,
+        idUser: result.id_user,
+        user: result.na_user,
+        email: result.ma_user,
       };
 
       return data;
@@ -311,7 +311,7 @@ class UserModel {
       const mail = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'em_user_web'
+        prop: 'ma_user'
       });
 
       return mail;
