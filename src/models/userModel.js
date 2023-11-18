@@ -78,7 +78,7 @@ class UserModel {
       const pass = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'pa_user'
+        prop: 'pa_user_web'
       });
 
       const result = await CryptManager.compararEncriptado({
@@ -222,9 +222,9 @@ class UserModel {
         params: [user],
       });
       const data = {
-        idUser: result.id_user,
-        user: result.us_user,
-        email: result.em_user,
+        idUser: result.id_user_web,
+        user: result.us_user_web,
+        email: result.em_user_web,
       };
 
       return data;
@@ -311,7 +311,7 @@ class UserModel {
       const mail = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'em_user'
+        prop: 'em_user_web'
       });
 
       return mail;
