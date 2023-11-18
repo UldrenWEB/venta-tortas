@@ -24,10 +24,12 @@ class UserModel {
       const result = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'id_user',
+        prop: "id_user",
       });
 
-      return result
+      console.log(result);
+
+      return result;
     } catch (error) {
       return { error };
     }
@@ -47,18 +49,18 @@ class UserModel {
       const isBlock = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'bl_user',
-
+        prop: "bl_user",
       });
 
       const attemps = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'at_user'
+        prop: "at_user",
       });
 
+      console.log(attemps);
 
-      return isBlock || attemps <= 0 ? true : false;
+      return isBlock || attemps <= 0;
     } catch (error) {
       return { error };
     }
@@ -79,7 +81,7 @@ class UserModel {
       const pass = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'pw_user'
+        prop: "pw_user",
       });
 
       const result = await CryptManager.compararEncriptado({
@@ -126,11 +128,13 @@ class UserModel {
    */
   static verifyIntentos = async ({ user }) => {
     try {
-      const [result] = await iManagerPgHandler.returnByProp({
+      const result = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'at_user'
+        prop: "at_user",
       });
+
+      if (!result) return 0;
 
       return result;
     } catch (error) {
@@ -198,6 +202,8 @@ class UserModel {
         key: "bloquear",
         params: [user],
       });
+
+      console.log(result);
       return result;
     } catch (error) {
       return { error };
@@ -313,7 +319,7 @@ class UserModel {
       const mail = await iManagerPgHandler.returnByProp({
         key: "selectUserUs",
         params: [user],
-        prop: 'ma_user'
+        prop: "ma_user",
       });
 
       return mail;
@@ -357,7 +363,7 @@ class UserModel {
       const result = await iManagerPgHandler.returnByProp({
         key: "hasProfile",
         params: [user, profile],
-        prop: 'id_profile'
+        prop: "id_profile",
       });
       return result;
     } catch (error) {

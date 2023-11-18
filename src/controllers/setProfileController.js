@@ -16,7 +16,10 @@ class setProfileController {
       const { user } = req.session;
       const profiles = await UserModel.getProfiles({ user });
 
-      const profilesMap = profiles.map((e) => e.na_profile);
+
+      const profilesMap = profiles.map((e) => e.de_profile);
+
+      console.log(profilesMap)
       req.session.profiles = profilesMap;
 
       if (profilesMap.length === 1) {

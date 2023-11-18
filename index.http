@@ -1,0 +1,15 @@
+HTTP https://venta-tortas-dev-htaz.4.us-1.fl0.io/desbloquear POST 
+Content-Type: application/json
+
+{
+  "user": "enmarcm" 
+}
+
+###
+HTTP https://venta-tortas-dev-htaz.4.us-1.fl0.io/desbloquear POST 
+Content-Type: application/json
+
+{
+  "user": "uldren12",
+  "password": "1234"
+}

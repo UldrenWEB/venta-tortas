@@ -19,6 +19,7 @@ class HomeController {
 
       const { profile } = req.session;
       const infoProfile = iSecurity.permissions.get(profile);
+
       const json = {
         userProfile: profile,
         message: `Estos son los metodos que tienes disponibles con el perfil que iniciaste, con /toProcess puedes ejecutarlos`,

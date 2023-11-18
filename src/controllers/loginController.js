@@ -116,7 +116,8 @@ class LoginController {
     try {
       const { user } = req.body;
       const intentos = await UserModel.verifyIntentos({ user });
-      return intentos.at_user;
+
+      return intentos;
     } catch (error) {
       return { error };
     }
@@ -143,7 +144,8 @@ class LoginController {
       if (await this.verifyPassword(req, res)) return;
       return next();
     } catch (error) {
-      return { error };
+      console.error(`Ocurrio un error en el middleware ${error.message} midAuth del archivo loginController.js`)
+      return { error: error.message };
     }
   };
 
