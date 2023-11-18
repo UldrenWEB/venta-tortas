@@ -218,14 +218,15 @@ class UserModel {
     try {
       if (!(await this.verifyPassword({ user, password }))) return false;
 
-      const result = await iManagerPgHandler.executeQuery({
+      const [result] = await iManagerPgHandler.executeQuery({
         key: "getDataSession",
         params: [user],
       });
+
       const data = {
         idUser: result.id_user,
-        user: result.us_user,
-        email: result.em_user,
+        user: result.na_user,
+        email: result.ma_user,
       };
 
       return data;
