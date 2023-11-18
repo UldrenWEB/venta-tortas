@@ -103,7 +103,7 @@ class UserModel {
    */
   static restoreIntentos = async ({ user }) => {
     try {
-      const result = await iManagerPgHandler.execute({
+      const result = await iManagerPgHandler.executeMethod({
         key: "restoreIntentos",
         params: [user],
       });
@@ -380,10 +380,12 @@ class UserModel {
       for (const key in params) {
         parametros.push(params[key]);
       }
+
       const result = await iManagerPgHandler.executeQuery({
         key: method,
         params: parametros,
       });
+
       return result;
     } catch (error) {
       return { error: error.message };

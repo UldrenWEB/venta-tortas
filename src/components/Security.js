@@ -61,7 +61,6 @@ class Security {
 
       return;
     } catch (error) {
-      console.log('si error')
       return { error };
     }
   };
