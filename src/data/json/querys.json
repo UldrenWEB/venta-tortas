@@ -1,21 +1,4 @@
 {
-<<<<<<< HEAD
-  "selectUsers": "SELECT * FROM user_web",
-  "selectUserId": "SELECT * FROM user_web WHERE id_user_web = $1",
-  "selectUserUs": "SELECT * FROM user_web WHERE us_user_web = $1",
-  "verifyUser": "select id_user_web from user_web WHERE us_user_web = $1",
-  "verifyBlock": "SELECT bl_user_web FROM user_web WHERE us_user_web = $1",
-  "verifyAttempts": "SELECT at_user_web FROM user_web WHERE us_user_web = $1",
-  "selectPassUser": "SELECT pa_user_web FROM user_web WHERE us_user_web = $1",
-  "restoreIntentos": "UPDATE user_web SET at_user_web = 3 WHERE us_user_web = $1",
-  "disminuirIntentos": "UPDATE user_web SET at_user_web = at_user_web - 1 WHERE us_user_web = $1",
-  "verifyIntentos": "SELECT at_user_web FROM user_web WHERE us_user_web = $1",
-  "bloquear": "UPDATE user_web SET bl_user_web = true, at_user_web = 0 WHERE us_user_web = $1",
-  "getDataSession": "SELECT uw.id_user_web, uw.us_user_web, uw.em_user_web FROM user_web uw WHERE uw.us_user_web = $1",
-  "obtenerPermisos": "SELECT p.de_profile profile, m.na_method method, o.na_object object, mo.na_module module FROM security.permission pe INNER JOIN security.profile p ON p.id_profile = pe.id_profile INNER JOIN security.method m ON m.id_method = pe.id_method INNER JOIN security.object o ON o.id_object = m.id_object INNER JOIN security.module mo ON mo.id_module = o.id_module",
-  "addUser": "INSERT INTO user_web (us_user_web, pa_user_web, em_user_web) VALUES ($1, $2, $3) RETURNING id_user_web",
-  "seeUser": "SELECT us_user_web as user, em_user_web as email FROM user_web WHERE us_user_web = $1",
-=======
   "selectUsers": "SELECT * FROM security.user",
   "selectUserId": "SELECT * FROM  security.user WHERE id_user = $1",
   "selectUserUs": "SELECT * FROM security.user WHERE na_user = $1",
@@ -28,10 +11,9 @@
   "verifyIntentos": "SELECT at_user FROM security.user WHERE na_user = $1",
   "bloquear": "UPDATE security.user SET bl_user = true, at_user = 0 WHERE na_user = $1",
   "getDataSession": "SELECT uw.id_user, uw.na_user, uw.em_user FROM security.user uw WHERE uw.na_user = $1",
-  "obtenerPermisos": "SELECT p. na_profileprofile, m.na_method method, o.de_object object, a.de_area area FROM permission pe INNER JOIN profile p ON p.id_profile = pe.id_profile INNER JOIN method m ON m.id_method = pe.id_method INNER JOIN object o ON o.id_object = m.id_object INNER JOIN area a ON a.id_area = o.id_area",
+  "obtenerPermisos": "SELECT p.na_profile profile, m.na_method method, o.de_object object, a.de_area area FROM permission pe INNER JOIN profile p ON p.id_profile = pe.id_profile INNER JOIN method m ON m.id_method = pe.id_method INNER JOIN object o ON o.id_object = m.id_object INNER JOIN area a ON a.id_area = o.id_area",
   "addUser": "INSERT INTO user_web (na_user, pa_user_web, em_user_web) VALUES ($1, $2, $3) RETURNING id_user_web",
   "seeUser": "SELECT na_user as user, em_user_web as email FROM security.user WHERE na_user = $1",
->>>>>>> 6d32eb48186a4645093c580d77cc1d50787b25f0
   "verifyMethod": "SELECT m.id_method, m.na_method FROM method m INNER JOIN object o ON m.id_object = o.id_object INNER JOIN area a ON a.id_area = o.id_area WHERE a.de_area = $1 AND o.de_object = $2 AND m.na_method = $3",
   "verifyProfile": "SELECT id_profile FROM profile WHERE na_profile = $1",
   "removePermission": "DELETE from permission WHERE id_method = $1 AND id_profile = $2",
