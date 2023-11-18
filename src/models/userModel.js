@@ -223,9 +223,9 @@ class UserModel {
         params: [user],
       });
       const data = {
-        idUser: result.id_user_web,
-        user: result.us_user_web,
-        email: result.em_user_web,
+        idUser: result.id_user,
+        user: result.us_user,
+        email: result.em_user,
       };
 
       return data;
