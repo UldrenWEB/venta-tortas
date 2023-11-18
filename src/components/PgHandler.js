@@ -66,7 +66,6 @@ class PgHandler {
    */
   #connect = async () => {
     try {
-      console.log('si')
       return await this.pool.connect();
     } catch (error) {
       return { error: error.message};

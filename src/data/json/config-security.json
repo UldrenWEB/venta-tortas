@@ -1,4 +1,4 @@
 {
-    "pathBO": "../controllers/BO",
+    "pathBO": "../BO",
     "loadInit": true
 }

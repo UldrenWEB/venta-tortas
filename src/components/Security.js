@@ -59,9 +59,9 @@ class Security {
       // Crea el mapa de permisos
       this.#putPermissionsMap({ permisos });
 
+      console.log(this.permissions)
       return;
     } catch (error) {
-      console.log('si error')
       return { error };
     }
   };
