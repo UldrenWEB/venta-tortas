@@ -6,10 +6,10 @@
 
 import express from "express";
 import picocolors from "picocolors";
-import iSession from "./data/instances/iSession.js";
-import { loginRouter, toProcessRouter, logoutRouter, setProfileRouter, changePasswordRouter, olvidoDatosRouter, homeRouter, desbloquearRouter } from "./routers/dispatcher.js";
-import { midCors, midNotFound, midAuthLogin, midNotProfile, midJson } from "./middlewares/middlewares.js";
-import SocketServer from "./components/SocketIO/server.js";
+import iSession from "./src/data/instances/iSession.js";
+import { loginRouter, toProcessRouter, logoutRouter, setProfileRouter, changePasswordRouter, olvidoDatosRouter, homeRouter, desbloquearRouter } from "./src/routers/dispatcher.js";
+import { midCors, midNotFound, midAuthLogin, midNotProfile, midJson } from "./src/middlewares/middlewares.js";
+import SocketServer from "./src/components/SocketIO/server.js";
 /**
  * Puerto en el que se iniciará el servidor.
  * @type {number}

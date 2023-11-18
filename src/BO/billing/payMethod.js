@@ -18,7 +18,7 @@ class payMethod {
 
       if (!obj[optionLower]) return false;
 
-      const result = await iManagerPgHandler.execute({
+      const result = await iManagerPgHandler.executeQuery({
         key: obj[optionLower],
         params,
       });
