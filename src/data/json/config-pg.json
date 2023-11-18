@@ -4,9 +4,7 @@
   "user": "fl0user",
   "password": "QsXbKDu2z7UA",
   "port": 5432,
-  "ssl": {
-    "rejectUnauthorized": false
-  },
+  "ssl": true,
   "max": 31,
   "idleTimeoutMillis": 1000,
   "maxUses": 7500
