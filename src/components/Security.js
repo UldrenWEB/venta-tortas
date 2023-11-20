@@ -95,9 +95,8 @@ class Security {
    */
   #putPermissionsMap = ({ permisos }) => {
     // Coloca en el mapa de los permisos obtenidos del controlador
-    console.log(permisos)
+    console.log(permisos);
     const result = permisos.reduce((acc, permiso) => {
-
       const { profile, object, method, area } = permiso;
 
       acc[profile] = acc[profile] || {};
@@ -149,13 +148,19 @@ class Security {
       await this.#verifyLoadPermissions();
 
       // Verifica si el usuario tiene permiso para ejecutar el método
-      const permiso = this.permissions
-        .get(profile)
-      [area][object].includes(method);
-
-      return permiso ? true : false;
+      try {
+        const permiso = this.permissions
+          .get(profile)
+          [area][object].includes(method);
+        return permiso ? true : false;
+      } catch (error) {
+        return false;
+      }
     } catch (error) {
-      return { error };
+      console.error(
+        `Ocurrio un error en hasPermission, el error es: ${error.message}`
+      );
+      return { error: error.message };
     }
   };
 
@@ -187,7 +192,9 @@ class Security {
       const metodoAEjecutar = obj[method] ?? moduleReady[method];
 
       // Ejecuta el método
-      const methodResult = await metodoAEjecutar(...(typeof params === "object" ? [params] : params));
+      const methodResult = await metodoAEjecutar(
+        ...(typeof params === "object" ? [params] : params)
+      );
       return methodResult;
     } catch (error) {
       console.error(`Existio un error ${error}`);
@@ -221,21 +228,21 @@ class Security {
       // Establece el permiso en la base de datos
       return status
         ? await this.#addPermission({
-          object,
-          idProfile,
-          idMethod,
-          profile,
-          method,
-          area,
-        })
+            object,
+            idProfile,
+            idMethod,
+            profile,
+            method,
+            area,
+          })
         : await this.#removePermission({
-          object,
-          idProfile,
-          idMethod,
-          profile,
-          method,
-          area,
-        });
+            object,
+            idProfile,
+            idMethod,
+            profile,
+            method,
+            area,
+          });
     } catch (error) {
       return { error };
     }
@@ -338,7 +345,7 @@ class Security {
       // Elimina el permiso del mapa de permisos
       const indiceBorrar = this.permissions
         .get(profile)
-      [area][object].indexOf(method);
+        [area][object].indexOf(method);
 
       if (indiceBorrar === -1) return false;
       this.permissions.get(profile)[area][object].splice(indiceBorrar, 1);
