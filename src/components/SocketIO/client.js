@@ -26,7 +26,9 @@ class Client {
       })
 
       return socket;
+      
     } catch (error) {
+      console.error(`Ocurrio un error en el metodo createSocketClient: ${error.message} del archivo SocketIO/client.js`)
       return { error: error.message }
     }
 
