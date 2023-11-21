@@ -31,7 +31,7 @@ class LoginController {
       const { user } = req.body;
       const userExist = await UserModel.verifyUser({ user });
       if (!userExist)
-        return res.status(400).json({ error: "Usuario no existe" });
+        return res.status(404).json({ error: "Usuario no existe" });
     } catch (error) {
       return { error };
     }
@@ -48,7 +48,7 @@ class LoginController {
     try {
       const userBlocked = await UserModel.verifyBlock({ user: req.body.user });
       if (userBlocked)
-        return res.status(400).json({ message: "Usuario bloqueado" });
+        return res.status(404).json({ message: "Usuario bloqueado" });
     } catch (error) {
       return { error };
     }
