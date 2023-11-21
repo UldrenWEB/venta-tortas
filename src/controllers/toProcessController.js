@@ -32,7 +32,6 @@ class ToProcessController {
           params,
         });
 
-        console.log(resultMethod)
         return res.json(resultMethod);
       } else {
         return res.json({ error: "No tienes permiso para ejecutar este método" });

@@ -17,9 +17,6 @@ class seller {
         params: [idSeller],
       });
 
-      console.log(result)
-      console.log(idSeller)
-      
       return result;
     } catch (error) {
       console.error(`Ocurrio un error en el metodo getInfoSeller: ${error.message} del objeto control.js de seller`)
