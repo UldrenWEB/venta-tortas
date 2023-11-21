@@ -3,7 +3,7 @@
 import { Server } from "socket.io"
 import { createServer } from 'node:http'
 import Message from '../../BO/messanger/control.js'
-
+import Control from '../../BO/local/control.js'
 
 //TODO: Aqui se manejaran los mensajes con sus rooms y nameSpaces
 class SocketServer {
@@ -16,6 +16,7 @@ class SocketServer {
     this.server = this.#createServer(app);
     this.#createNsp(this.io)
     this.dbMessage = new Message();
+    this.local = new Control();
   }
 
   #createServer = (app) => {
@@ -33,8 +34,6 @@ class SocketServer {
     }
   }
 
-  getServer = () => this.server;
-
   #createNsp = (io) => {
     return io.of(this.namespace)
   }
@@ -44,15 +43,39 @@ class SocketServer {
   }
 
   //Los rooms son un arreglo de nombres de los diferentes rooms
-  createRoom = ({ rooms }) => {
-    if (!rooms) return false;
-
-    rooms.forEach(room => {
-      this.rooms[room] = true
-    })
-
-    return this.rooms;
+  #getRoutes = async () => {
+    try {
+      const routes = await this.local.getAllOf({
+        of: 'route'
+      })
+      let arrayRoutes = [];
+      routes.forEach(obj => {
+        arrayRoutes.push(obj['de_route'])
+      })
+      return arrayRoutes;
+    } catch (error) {
+      return { error: error.message }
+    }
   }
+
+  #createRoom = async () => {
+    try {
+
+      const array = await this.#getRoutes();
+
+      let objRooms = {}
+      array.forEach(room => {
+        objRooms[room] = true
+      })
+
+      console.log('Aqui objeto', objRooms);
+      return objRooms;
+    } catch (error) {
+      return { error: error.message }
+    }
+  }
+
+  getServer = () => this.server;
 
   #onConnection = (socket) => {
     try {
@@ -110,6 +133,7 @@ class SocketServer {
 
   //Enviar al namespace o algun room en especifico
   #manageFile = async (data) => {
+    const rooms = await this.#createRoom();
     const { socket, destination, file, user, typeFile, message } = data;
     const date = this.#getDateNow('mm/dd/yyyy');
     try {
@@ -145,7 +169,7 @@ class SocketServer {
         }
 
         return false;
-      } else if (this.rooms[destination]) {
+      } else if (rooms[destination]) {
         if (typeFile === 'image') {
           let bool = await this.#iterator({
             userEmit: user,
@@ -202,11 +226,14 @@ class SocketServer {
   }
 
   #eventMessage = async (data) => {
+    const rooms = await this.#createRoom();
     const { socket, room, message } = data
     const { user } = socket.handshake.query
     const date = this.#getDateNow('mm/dd/yyyy')
     console.log(`Envias por el room ${room} el mensaje de ${message}`);
     try {
+      if (!rooms[room]) return false;
+
       const bool = await this.#iterator({
         userEmit: user,
         map: this.socketJoinRoom,
