@@ -134,7 +134,7 @@ class LoginController {
   static midAuth = async (req, res, next) => {
     try {
       if (req.method === "GET") return next();
-      if (iSession.sessionExist(req)) return res.redirect(200, "/home");
+      if (iSession.sessionExist(req)) return res.redirect(303, "/home");
       if (this.verifyData(req, res)) return;
       if (await this.verifyUser(req, res)) return;
       if (await this.verifyBlock(req, res)) return;
