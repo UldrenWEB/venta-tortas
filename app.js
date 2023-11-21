@@ -2,6 +2,7 @@
  * @file Archivo principal de la aplicación.
  * @description Este archivo inicia el servidor y configura los middlewares y routers, ejecutando el SessionComponent y el Security Component.
  * @author Enmanuel Colina <theenmanuel123@gmail.com>
+ * @author Uldren Gedde <uldren.30333757@uru.edu>
  */
 
 import express from "express";
@@ -24,6 +25,7 @@ const PORT = process.env.PORT ?? 7878;
 const app = express();
 const socketServer = new SocketServer(app);
 const server = socketServer.getServer();
+
 // Configuración de middlewares y routers.
 socketServer.manager();
 app.use(midCors);
