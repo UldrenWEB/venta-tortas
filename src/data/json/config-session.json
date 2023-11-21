@@ -8,5 +8,6 @@
     "secure": true,
     "sameSite": "none"
   },
-  "rolling": true
+  "rolling": true,
+  "proxy": true
 }
