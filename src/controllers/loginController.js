@@ -174,7 +174,7 @@ class LoginController {
       };
 
       return iSession.createSesion({ req, infoUser })
-        ? res.cookie("user", infoUser).json({ message: "Sesión iniciada" })
+        ? res.cookie("user", infoUser, { secure: true, sameSite: 'None' }).json({ message: "Cookie creada" })
         : res
           .status(400)
           .json({
