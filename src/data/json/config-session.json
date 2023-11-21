@@ -6,7 +6,7 @@
     "maxAge": 60000,
     "name": "cookie-session",
     "secure": true,
-    "sameSite": "None"
+    "sameSite": "none"
   },
   "rolling": true
 }
