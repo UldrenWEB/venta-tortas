@@ -3,7 +3,7 @@
   "resave": true,
   "saveUninitialized": true,
   "cookie": {
-    "maxAge": 60000,
+    "maxAge": 600000000,
     "name": "cookie-session",
     "secure": true,
     "sameSite": "none"
