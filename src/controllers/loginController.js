@@ -76,11 +76,9 @@ class LoginController {
         });
 
         if (intentos === 0) return await this.bloquear(req, res);
-        return res
-          .status(400)
-          .json({
-            error: `Contraseña incorrecta, te quedan ${intentos} intentos`,
-          });
+        return res.status(400).json({
+          error: `Contraseña incorrecta, te quedan ${intentos} intentos`,
+        });
       }
     } catch (error) {
       return { error };
@@ -136,15 +134,16 @@ class LoginController {
   static midAuth = async (req, res, next) => {
     try {
       if (req.method === "GET") return next();
-      if (iSession.sessionExist(req))
-        return res.status(400).json({ error: "Ya estás logueado" });
+      if (iSession.sessionExist(req)) return res.redirect(200, "/home");
       if (this.verifyData(req, res)) return;
       if (await this.verifyUser(req, res)) return;
       if (await this.verifyBlock(req, res)) return;
       if (await this.verifyPassword(req, res)) return;
       return next();
     } catch (error) {
-      console.error(`Ocurrio un error en el middleware ${error.message} midAuth del archivo loginController.js`)
+      console.error(
+        `Ocurrio un error en el middleware ${error.message} midAuth del archivo loginController.js`
+      );
       return { error: error.message };
     }
   };
@@ -175,9 +174,7 @@ class LoginController {
 
       return iSession.createSesion({ req, infoUser })
         ? res.redirect(303, "/setProfile")
-        : res
-          .status(400)
-          .json({
+        : res.status(400).json({
             error: `No se pudo crear la sesión para ${infoUser.user}`,
           });
     } catch (error) {

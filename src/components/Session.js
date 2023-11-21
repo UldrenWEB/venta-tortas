@@ -38,7 +38,6 @@ class Session {
    * @returns {boolean} - true si se creó la sesión, false si no se creó la sesión.
    */
   createSesion = ({ req, infoUser }) => {
-    console.log(infoUser)
     if (this.sessionExist(req)) return false;
 
     for (const key in infoUser) {

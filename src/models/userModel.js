@@ -27,8 +27,6 @@ class UserModel {
         prop: "id_user",
       });
 
-      console.log(result);
-
       return result;
     } catch (error) {
       return { error };
@@ -57,8 +55,6 @@ class UserModel {
         params: [user],
         prop: "at_user",
       });
-
-      console.log(attemps);
 
       return isBlock || attemps <= 0;
     } catch (error) {
@@ -203,7 +199,6 @@ class UserModel {
         params: [user],
       });
 
-      console.log(result);
       return result;
     } catch (error) {
       return { error };
