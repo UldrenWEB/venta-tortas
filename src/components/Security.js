@@ -95,7 +95,6 @@ class Security {
    */
   #putPermissionsMap = ({ permisos }) => {
     // Coloca en el mapa de los permisos obtenidos del controlador
-    console.log(permisos);
     const result = permisos.reduce((acc, permiso) => {
       const { profile, object, method, area } = permiso;
 
@@ -107,7 +106,6 @@ class Security {
     }, {});
 
     // Agrega los permisos al mapa de permisos
-    console.log(result);
     for (const profile in result) {
       const porArea = result[profile];
       this.permissions.set(profile, porArea);
@@ -198,7 +196,7 @@ class Security {
       return methodResult;
     } catch (error) {
       console.error(`Existio un error ${error}`);
-      return { error };
+      return { error: error.message };
     }
   };
 

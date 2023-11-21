@@ -9,6 +9,7 @@ import picocolors from "picocolors";
 import iSession from "./src/data/instances/iSession.js";
 import { loginRouter, toProcessRouter, logoutRouter, setProfileRouter, changePasswordRouter, olvidoDatosRouter, homeRouter, desbloquearRouter } from "./src/routers/dispatcher.js";
 import { midCors, midNotFound, midAuthLogin, midNotProfile, midJson } from "./src/middlewares/middlewares.js";
+import cors from "cors";
 import SocketServer from "./src/components/SocketIO/server.js";
 import { Socket } from "socket.io";
 /**
@@ -27,7 +28,7 @@ const server = socketServer.getServer();
 // Configuración de middlewares y routers.
 socketServer.manager();
 app.use(midCors);
-// app.use(cors({credentials: true, origin: true})); // <-- Se agrego para Navegador WEB
+app.use(cors({credentials: true, origin: true})); // <-- Se agrego para Navegador WEB
 app.use(iSession.loadSession);
 app.use(express.json());
 app.use(midJson) // <-- Se agrego para manejar excepciones de JSON en formato incorrecto
