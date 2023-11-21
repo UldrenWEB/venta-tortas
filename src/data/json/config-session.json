@@ -4,7 +4,8 @@
   "saveUninitialized": true,
   "cookie": {
     "maxAge": 60000,
-    "name": "cookie-session"
+    "name": "cookie-session",
+    "secure": true
   },
   "rolling": true
 }
