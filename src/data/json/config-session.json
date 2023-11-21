@@ -5,7 +5,8 @@
   "cookie": {
     "maxAge": 60000,
     "name": "cookie-session",
-    "secure": true
+    "secure": true,
+    "sameSite": "None"
   },
   "rolling": true
 }
