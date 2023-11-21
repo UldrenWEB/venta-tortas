@@ -10,6 +10,7 @@ import iSession from "./src/data/instances/iSession.js";
 import { loginRouter, toProcessRouter, logoutRouter, setProfileRouter, changePasswordRouter, olvidoDatosRouter, homeRouter, desbloquearRouter } from "./src/routers/dispatcher.js";
 import { midCors, midNotFound, midAuthLogin, midNotProfile, midJson } from "./src/middlewares/middlewares.js";
 import SocketServer from "./src/components/SocketIO/server.js";
+import { Socket } from "socket.io";
 /**
  * Puerto en el que se iniciará el servidor.
  * @type {number}
@@ -21,7 +22,10 @@ const PORT = process.env.PORT ?? 7878;
  * @type {express.Application}
  */
 const app = express();
+const socketServer = new SocketServer(app);
+const server = socketServer.getServer();
 // Configuración de middlewares y routers.
+socketServer.manager();
 app.use(midCors);
 // app.use(cors({credentials: true, origin: true})); // <-- Se agrego para Navegador WEB
 app.use(iSession.loadSession);
@@ -52,4 +56,4 @@ const listenServer = () =>
   );
 
 // Inicio del servidor
-app.listen(PORT, listenServer);
+server.listen(PORT, listenServer);
