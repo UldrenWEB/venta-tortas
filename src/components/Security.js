@@ -191,11 +191,12 @@ class Security {
       // Obtiene el método a ejecutar
       const metodoAEjecutar = obj[method] ?? moduleReady[method];
 
-      console.log(metodoAEjecutar)
       // Ejecuta el método
       const methodResult = await metodoAEjecutar(
         ...(typeof params === "object" ? [params] : params)
       );
+
+      console.log(methodResult)
 
       return methodResult;
     } catch (error) {
