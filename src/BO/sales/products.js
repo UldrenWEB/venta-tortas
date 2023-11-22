@@ -3,9 +3,9 @@
 import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 
 class Products {
-  constructor() {}
+  constructor() { }
 
-  getAll = async ({ option }) => {
+  getAll = async (option) => {
     try {
       const optionLower = option.toLowerCase();
       const obj = {
@@ -17,7 +17,7 @@ class Products {
       if (!obj[optionLower]) return false;
 
       const result = await iManagerPgHandler.executeQuery({
-        key: obj[optionLower],
+        key: obj[optionLower]
       });
 
       return result;
@@ -28,7 +28,7 @@ class Products {
 
   //?condition: presentation, amount, range, largerthan, lessthan
   //?params: idPresentation, montoEspecifico, rangosDeMonto, mayorQueElMonto, menorQueElMonto
-  getAllProductByCondition = async ({ condition, params }) => {
+  getAllProductByCondition = async (condition, params) => {
     try {
       const condiLower = condition.toLowerCase();
       const obj = {
@@ -53,7 +53,7 @@ class Products {
   };
 
   //?params: idProduct
-  getAllPresentationByProduct = async ({ params }) => {
+  getAllPresentationByProduct = async (params) => {
     try {
       const result = await iManagerPgHandler.executeQuery({
         key: "selectPresentationByProduct",
@@ -67,7 +67,7 @@ class Products {
   };
 
   //?params: idProduct, idPresentation
-  getAmountByProductAndPresentation = async ({ params }) => {
+  getAmountByProductAndPresentation = async (params) => {
     try {
       const amount = await iManagerPgHandler.returnByProp({
         key: "selectAmountByProductAndPresentation",
@@ -83,7 +83,7 @@ class Products {
 
   //?option: product, presentation, productsale
   //?params: deProduct || dePresentation || (idProducto, idPresentacion, monto)
-  insertTo = async ({ option, params }) => {
+  insertTo = async (option, params) => {
     try {
       const optionLower = option.toLowerCase();
       const obj = {
@@ -108,7 +108,7 @@ class Products {
   //*Poner parametros de query en la posicion que se indica abajo
   //?option: product, presentation, amountproduct
   //?params: idProduct, newDeProduct || idPresentation, newDePresentation || idProduct, idPresentation, newAmount
-  updateTo = async ({ option, params }) => {
+  updateTo = async (option, params) => {
     try {
       const optionLower = option.toLowerCase();
       const obj = {
@@ -131,7 +131,7 @@ class Products {
 
   //?option: product || presentation
   //?params: idProduct || idPresentation
-  deleteTo = async ({ option, params }) => {
+  deleteTo = async (option, params) => {
     try {
       const optionLower = option.toLowerCase();
       const obj = {
@@ -158,7 +158,7 @@ class Products {
 
   //*Para borrar un producto venta que es delicado tiene que ser con su id de produc_sale
   //?params: idProductSale
-  deleteProductSale = async ({ params }) => {
+  deleteProductSale = async (params) => {
     try {
       const modified = await iManagerPgHandler.execute({
         key: "deleteProductSale",

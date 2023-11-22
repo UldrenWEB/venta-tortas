@@ -29,5 +29,10 @@
   "updatePassword": "UPDATE security.user SET pw_user = $1 WHERE na_user = $2",
   "getMail": "SELECT em_user FROM security.user WHERE na_user = $1",
   "desbloquear": "UPDATE security.user SET bl_user = false, at_user = 3 WHERE na_user = $1",
-  "selectAllRoute": "SELECT rt.id_route, rt.de_route FROM local.route rt"
+  "selectAllRoute": "SELECT rt.id_route, rt.de_route FROM local.route rt",
+  "selectAllProductsSale": "SELECT ps.id_product_sale, p.de_product, pt.de_presentation, ps.am_product_sale FROM sell.product_sale ps INNER JOIN sell.product p ON p.id_product = ps.id_product INNER JOIN sell.presentation pt ON pt.id_presentation = ps.id_presentation",
+  "selectProductSaleByPresentation": "SELECT p.id_product, p.de_product FROM sell.product p INNER JOIN sell.product_sale ps ON ps.id_product = p.id_product INNER JOIN sell.presentation pt ON pt.id_presentation = ps.id_presentation WHERE pt.id_presentation LIKE '%$1%'",
+  "selectProductSaleByAmount": "SELECT ps.id_product_sale, p.de_product, pt.de_presentation FROM sell.product_sale ps INNER JOIN sell.product p ON p.id_product = ps.id_product INNER JOIN sell.presentation pt ON pt.id_presentation = ps.id_presentation  WHERE ps.am_product_sale = $1",
+  "selectProductLargerThanAmount": "SELECT ps.id_product_sale, p.de_product, pt.de_presentation FROM sell.product_sale ps INNER JOIN sell.product p ON p.id_product = ps.id_product INNER JOIN sell.presentation pt ON pt.id_presentation = ps.id_presentation  WHERE ps.am_product_sale >= $1",
+  "selectProductLessThanAmount": "SELECT ps.id_product_sale, p.de_product, pt.de_presentation FROM sell.product_sale ps INNER JOIN sell.product p ON p.id_product = ps.id_product INNER JOIN sell.presentation pt ON pt.id_presentation = ps.id_presentation  WHERE ps.am_product_sale <= $1"
 }
