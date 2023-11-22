@@ -1,5 +1,5 @@
 {
-  "secret": "cookie",
+  "secret": "cookie-tortas",
   "resave": true,
   "saveUninitialized": true,
   "cookie": {
