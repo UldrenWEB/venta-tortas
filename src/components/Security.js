@@ -187,9 +187,11 @@ class Security {
       // Crea una instancia del objeto de negocio
       const obj = new moduleReady();
 
+      console.log(area, object, method, params)
       // Obtiene el método a ejecutar
       const metodoAEjecutar = obj[method] ?? moduleReady[method];
 
+      console.log(metodoAEjecutar)
       // Ejecuta el método
       const methodResult = await metodoAEjecutar(
         ...(typeof params === "object" ? [params] : params)
