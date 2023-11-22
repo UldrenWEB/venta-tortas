@@ -4,10 +4,9 @@
   "saveUninitialized": true,
   "cookie": {
     "maxAge": 600000000,
-    "name": "cookie-session",
-    "secure": true,
-    "sameSite": "none"
+    "name": "cookie-tortas",
+    "secure": false
   },
   "rolling": true,
-  "proxy": true
+  "proxy": false
 }

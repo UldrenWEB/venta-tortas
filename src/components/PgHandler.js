@@ -108,7 +108,8 @@ class PgHandler {
     try {
       await client.query("BEGIN");
       for (const elemento of querys) {
-        const { key, params, insertResult, id } = elemento;
+        const { key, params, id } = elemento;
+        let insertResult = elemento.insertResult;
         let finalParams;
 
         if (id) {
@@ -134,6 +135,7 @@ class PgHandler {
       const result = await client.query("COMMIT");
       return result;
     } catch (error) {
+      // console.log(error)
       await client.query("ROLLBACK");
       return { error };
     } finally {

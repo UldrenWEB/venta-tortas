@@ -55,7 +55,7 @@
   "insertAddress": "INSERT INTO person.address (de_address, id_street) VALUES ($1, $2) RETURNING id_address",
   "updatePerson": "UPDATE person.person SET na_person = $1, ln_person = $2, nu_person = $3, id_address = $4 WHERE id_person = $5",
   "updateAddress": "UPDATE person.address SET de_address = $1, id_street = $2 WHERE id_address = $3",
-  "insertTypePerson": "INSERT INTO person.person_tp_person (id_tp_person, id_person) VALUES ($1, $2) RETURNING id_person",
+  "insertTypePerson": "INSERT INTO person.person_tp_person (id_person, id_tp_person) VALUES ($1, $2) RETURNING id_person",
   "deletePersonTypePerson": "DELETE FROM person.person_tp_person WHERE id_person = $1",
   "deletePerson": "DELETE FROM person.person WHERE id_person = $1",
   "getAllAddress": "SELECT * FROM person.address",
