@@ -196,8 +196,6 @@ class Security {
         ...(typeof params === "object" ? [params] : params)
       );
 
-      console.log(methodResult)
-
       return methodResult;
     } catch (error) {
       console.error(`Existio un error ${error}`);

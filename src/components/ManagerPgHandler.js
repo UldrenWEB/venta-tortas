@@ -77,6 +77,7 @@ class ManagerPgHandler {
         params: params,
       });
 
+      console.log(result)
       return result.length > 0 ? result : false;
     } catch (error) {
       console.error(`Ocurrio un error en el metodo executeQuery: ${error.message} del objeto ManagerPgHandler.js`)
