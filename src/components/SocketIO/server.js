@@ -54,10 +54,13 @@ class SocketServer {
       const routes = await this.local.getAllOf({
         of: "route",
       });
+
+      console.log('Aqui routes', routes);
       let arrayRoutes = [];
       routes.forEach((obj) => {
         arrayRoutes.push(obj["de_route"]);
       });
+      console.log('Aqui array', arrayRoutes);
       return arrayRoutes;
     } catch (error) {
       return { error: error.message };
@@ -67,7 +70,7 @@ class SocketServer {
   #createRoom = async () => {
     try {
       const array = await this.#getRoutes();
-
+      console.log(array);
       let objRooms = {};
       array.forEach((room) => {
         objRooms[room] = true;
@@ -96,7 +99,36 @@ class SocketServer {
 
       socket.on("file", this.#manageFile);
       socket.on("general message", this.#eventBroadcast);
-      socket.on("message zone", this.#eventMessage);
+
+      socket.on("message zone", async (data) => {
+        const rooms = await this.#createRoom();
+        console.log(rooms);
+        const { room, message } = data;
+        const { user } = socket.handshake.query;
+        const date = this.#getDateNow("mm/dd/yyyy");
+        console.log(`Envias por el room ${room} el mensaje de ${message}`);
+        try {
+          if (!rooms[room]) {
+            console.log('PASE AQUI')
+            return false;
+          }
+
+          const bool = await this.#iterator({
+            userEmit: user,
+            map: this.socketJoinRoom,
+            typeMessage: "zone",
+            message: message,
+            option: "messageNames",
+            date: date,
+          });
+          if (!bool) return false;
+
+          console.log('Llego aqui se enviara el mensaje y ya se cargo en la base de datoa');
+          return this.io.to(room).emit("room_message", { message });
+        } catch (error) {
+          return { error: error.message };
+        }
+      });
       socket.on("direct message", this.#eventDirectMessage);
 
       //*Estos eventos si se utililizan aqui para poder capturar el socket unirse a la sala y escuchar el evento
@@ -243,7 +275,7 @@ class SocketServer {
 
   #eventMessage = async (data) => {
     const rooms = await this.#createRoom();
-    const { socket, room, message } = data;
+    const { room, message } = data;
     const { user } = socket.handshake.query;
     const date = this.#getDateNow("mm/dd/yyyy");
     console.log(`Envias por el room ${room} el mensaje de ${message}`);

@@ -55,7 +55,7 @@ class Control {
       if (!obj[ofLower]) return false;
 
       const result = await iManagerPgHandler.executeQuery({
-        key: obj[ofLower],
+        key: obj[ofLower]
       });
 
       return result;
