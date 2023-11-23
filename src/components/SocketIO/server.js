@@ -4,17 +4,21 @@ import { Server } from "socket.io";
 import { createServer } from "node:http";
 import Message from "../../BO/messanger/control.js";
 import Control from "../../BO/local/control.js";
+import { error } from "node:console";
 
 //TODO: Aqui se manejaran los mensajes con sus rooms y nameSpaces
 class SocketServer {
   constructor(app) {
     this.io;
-    this.rooms = {};
+
     this.socketMap = new Map();
     this.socketJoinRoom = new Map();
+
     this.namespace = "myNamespace";
+
     this.server = this.#createServer(app);
     this.#createNsp(this.io);
+
     this.dbMessage = new Message();
     this.local = new Control();
   }
@@ -55,12 +59,10 @@ class SocketServer {
         of: "route",
       });
 
-      console.log('Aqui routes', routes);
       let arrayRoutes = [];
       routes.forEach((obj) => {
         arrayRoutes.push(obj["de_route"]);
       });
-      console.log('Aqui array', arrayRoutes);
       return arrayRoutes;
     } catch (error) {
       return { error: error.message };
@@ -76,7 +78,6 @@ class SocketServer {
         objRooms[room] = true;
       });
 
-      console.log("Aqui objeto", objRooms);
       return objRooms;
     } catch (error) {
       return { error: error.message };
@@ -89,25 +90,119 @@ class SocketServer {
     try {
       this.#saveSocket(socket, this.socketMap);
 
-      //if (!socket.recovered) { }//*Algo asi era
-      //TODO: ME FALTA CARGAR LOS DATOS DESPUES DE UNA DESCONEXION PARA QUE CARGUE TODO EL CHAT CUANDO SE VUELVA A CONECTAR YA TENGA TODOS SUS
+      console.log("Un usuario se acaba de conectar", this.socketMap.has(socket.handshake.query.user));
 
-      console.log(
-        "Un usuario se acaba de conectar",
-        this.socketMap.has(socket.handshake.query.user)
-      );
+      socket.on("file", async (data) => {
+        const rooms = await this.#createRoom();
+        const { destination, file, user, typeFile, message } = data;
+        const date = this.#getDateNow("mm/dd/yyyy");
+        try {
+          const { userEmit } = socket.handshake.query;
+          if (this.socketMap.get(user)) {
+            if (typeFile === "image") {
+              const modified = await this.dbMessage.insertTo({
+                option: "image",
+                params: [
+                  file,
+                  userEmit,
+                  this.socketMap.get(user),
+                  "direct",
+                  message,
+                  date,
+                ],
+              });
+              if (!modified) return false;
 
-      socket.on("file", this.#manageFile);
-      socket.on("general message", this.#eventBroadcast);
+              this.io
+                .to(this.socketMap[socket])
+                .emit("direct_message", { file, typeFile, message });
+              return true;
+            }
+            return false;
+          } else if (destination === this.namespace) {
+            if (typeFile === "image") {
+              let bool = await this.#iterator({
+                userEmit: user,
+                map: this.socketMap,
+                typeMessage: "broadcast",
+                message: message,
+                option: "image",
+                date: date,
+              });
+              if (!bool) return false;
+
+              this.io
+                .to(destination)
+                .emit("broadcast_message", { file, typeFile, message });
+              return true;
+            }
+
+            return false;
+          } else if (rooms[destination]) {
+            if (typeFile === "image") {
+              let bool = await this.#iterator({
+                userEmit: user,
+                map: this.socketJoinRoom,
+                typeMessage: "zone",
+                message: message,
+                option: "image",
+                date: date,
+              });
+              if (!bool) return false;
+
+              this.io
+                .to(destination)
+                .emit("room_message", { file, typeFile, message });
+              return true;
+            }
+          }
+
+          return false;
+        } catch (error) {
+          return { error: error.message };
+        }
+      });
+
+      socket.on("general message", async (data) => {
+        const { socket, namespace, message } = data;
+        const date = this.#getDateNow("mm/dd/yyyy");
+        const { user } = socket.handshake.query;
+
+        console.log(
+          `Envias por el nameSpace ${namespace} el mensaje de ${message}, el dia de ${date}`
+        );
+
+        if (this.namespace === namespace) {
+          try {
+            const bool = await this.#iterator({
+              userEmit: user,
+              map: this.socketMap,
+              typeMessage: "broadcast",
+              message: message,
+              option: "messageNames",
+              date: date,
+            });
+            if (!bool || bool.error) return console.error('Hubo un error al insertar un mensaje en la base de datos', bool.error);
+
+            return this.io.to(namespace).emit("broadcast_message", { message });
+          } catch (error) {
+            return { error: error.message };
+          }
+        }
+        return console.error("Es incorrecto el nameSpace, verifique");
+        //Para emitir el mensaje a todos
+      });
 
       socket.on("message zone", async (data) => {
-        const rooms = await this.#createRoom();
-        console.log(rooms);
-        const { room, message } = data;
-        const { user } = socket.handshake.query;
-        const date = this.#getDateNow("mm/dd/yyyy");
-        console.log(`Envias por el room ${room} el mensaje de ${message}`);
         try {
+          const rooms = await this.#createRoom();
+          if (!rooms) return console.log('Hubo un error al crear los socket');
+
+          const { room, message } = data;
+          const { user } = socket.handshake.query;
+          const date = this.#getDateNow("mm/dd/yyyy");
+
+          console.log(`Envias por el room ${room} el mensaje de ${message}`);
           if (!rooms[room]) {
             console.log('PASE AQUI')
             return false;
@@ -121,15 +216,38 @@ class SocketServer {
             option: "messageNames",
             date: date,
           });
-          if (!bool) return false;
+          if (!bool || bool.error) return console.log('Hubo un error al cargar un mensaje en la base de datos', bool.error);
 
-          console.log('Llego aqui se enviara el mensaje y ya se cargo en la base de datoa');
           return this.io.to(room).emit("room_message", { message });
         } catch (error) {
           return { error: error.message };
         }
       });
-      socket.on("direct message", this.#eventDirectMessage);
+
+      socket.on("direct message", async (data) => {
+        try {
+          const { user, message } = data;
+          const socketReceived = this.socketMap.get(user);
+          const { userEmit } = socket.handshake.query;
+          const date = this.#getDateNow("mm/dd/yyyy");
+
+          if (!socketReceived) {
+            console.log("No se encontro ese usuario");
+            return false;
+          }
+
+          console.log(`Envias al usuario ${user} el mensaje de ${message}`);
+          const bool = await this.dbMessage.insertTo({
+            option: "messagenames",
+            params: [userEmit, user, "direct", message, date],
+          });
+          if (!bool) return false;
+
+          return this.io.to(socketReceived).emit("direct_message", { message });
+        } catch (error) {
+          return { error: error.message };
+        }
+      });
 
       //*Estos eventos si se utililizan aqui para poder capturar el socket unirse a la sala y escuchar el evento
       socket.on("disconnect", () => {
@@ -158,7 +276,8 @@ class SocketServer {
   #iterator = async ({ map, userEmit, typeMessage, date, option, message }) => {
     try {
       for (let key of map) {
-        if (key != user) {
+        //Esto se hace para que no pueda insertar en la base de datos que el mismo que la envio salga que el mismo recibio su mensaje
+        if (key !== userEmit) {
           const modified = await this.dbMessage.insertTo({
             option: option,
             params: [userEmit, key, typeMessage, message, date],
@@ -166,157 +285,7 @@ class SocketServer {
           if (!modified) return false;
         }
       }
-    } catch (error) {
-      return { error: error.message };
-    }
-  };
-
-  //Enviar al namespace o algun room en especifico
-  #manageFile = async (data) => {
-    const rooms = await this.#createRoom();
-    const { socket, destination, file, user, typeFile, message } = data;
-    const date = this.#getDateNow("mm/dd/yyyy");
-    try {
-      const { user } = socket.handshake.query;
-      if (this.socketMap.get(user)) {
-        if (typeFile === "image") {
-          const modified = await this.dbMessage.insertTo({
-            option: "image",
-            params: [
-              file,
-              user,
-              this.socketMap.get(user),
-              "direct",
-              message,
-              date,
-            ],
-          });
-          if (!modified) return false;
-
-          this.io
-            .to(this.socketMap[socket])
-            .emit("direct_message", { file, typeFile, message });
-          return true;
-        }
-        return false;
-      } else if (destination === this.namespace) {
-        if (typeFile === "image") {
-          let bool = await this.#iterator({
-            userEmit: user,
-            map: this.socketMap,
-            typeMessage: "broadcast",
-            message: message,
-            option: "image",
-            date: date,
-          });
-          if (!bool) return false;
-
-          this.io
-            .to(destination)
-            .emit("broadcast_message", { file, typeFile, message });
-          return true;
-        }
-
-        return false;
-      } else if (rooms[destination]) {
-        if (typeFile === "image") {
-          let bool = await this.#iterator({
-            userEmit: user,
-            map: this.socketJoinRoom,
-            typeMessage: "zone",
-            message: message,
-            option: "image",
-            date: date,
-          });
-          if (!bool) return false;
-
-          this.io
-            .to(destination)
-            .emit("room_message", { file, typeFile, message });
-          return true;
-        }
-      }
-
-      return false;
-    } catch (error) {
-      return { error: error.message };
-    }
-  };
-
-  #eventBroadcast = async (data) => {
-    const { socket, namespace, message } = data;
-    const date = this.#getDateNow("mm/dd/yyyy");
-    const { user } = socket.handshake.query;
-
-    console.log(
-      `Envias por el nameSpace ${namespace} el mensaje de ${message}, el dia de ${date}`
-    );
-
-    if (this.namespace === namespace) {
-      try {
-        const bool = await this.#iterator({
-          userEmit: user,
-          map: this.socketMap,
-          typeMessage: "broadcast",
-          message: message,
-          option: "messageNames",
-          date: date,
-        });
-        if (!bool) return false;
-
-        return this.io.to(namespace).emit("broadcast_message", { message });
-      } catch (error) {
-        return { error: error.message };
-      }
-    }
-    return console.error("Es incorrecto el nameSpace, verifique");
-    //Para emitir el mensaje a todos
-  };
-
-  #eventMessage = async (data) => {
-    const rooms = await this.#createRoom();
-    const { room, message } = data;
-    const { user } = socket.handshake.query;
-    const date = this.#getDateNow("mm/dd/yyyy");
-    console.log(`Envias por el room ${room} el mensaje de ${message}`);
-    try {
-      if (!rooms[room]) return false;
-
-      const bool = await this.#iterator({
-        userEmit: user,
-        map: this.socketJoinRoom,
-        typeMessage: "zone",
-        message: message,
-        option: "messageNames",
-        date: date,
-      });
-      if (!bool) return false;
-
-      return this.io.to(room).emit("room_message", { message });
-    } catch (error) {
-      return { error: error.message };
-    }
-  };
-
-  #eventDirectMessage = async (data) => {
-    const { user, message } = data;
-    const socketReceived = this.socketMap.get(user);
-    const { userEmit } = socket.handshake.query;
-    const date = this.#getDateNow("mm/dd/yyyy");
-
-    if (!socketReceived) {
-      console.log("No se encontro ese usuario");
-      return false;
-    }
-    console.log(`Envias al usuario ${user} el mensaje de ${message}`);
-    try {
-      const bool = await this.dbMessage.insertTo({
-        option: "messagenames",
-        params: [userEmit, user, "direct", message, date],
-      });
-      if (!bool) return false;
-
-      return this.io.to(socketReceived).emit("direct_message", { message });
+      return true;
     } catch (error) {
       return { error: error.message };
     }
