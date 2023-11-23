@@ -96,6 +96,7 @@ class ManagerPgHandler {
         objQuerys: this.querys,
         querys: querys,
       });
+
       return result;
     } catch (error) {
       console.error(`Ocurrio un error en el metodo transaction: ${error.message} del objeto ManagerPgHandler.js`)

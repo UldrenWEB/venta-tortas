@@ -73,8 +73,8 @@ class control {
       const objQuerys = {
         person: "getAllPerson",
         address: "getAllAddress",
-        typePerson: "getAllTypePerson",
-        getAllPersonWithAddress: "getAllPersonWithAddress",
+        typeperson: "getAllTypePerson",
+        getallpersonwithaddress: "getAllPersonWithAddress",
       };
 
       if (!objQuerys[byLower]) return false;
@@ -179,9 +179,10 @@ class control {
         return obj;
       });
 
-      const querys = [...querysType, queryPerson];
-
+      const querys = [queryPerson, ...querysType, ];
+      console.log(querys)
       const result = await iManagerPgHandler.transaction({ querys });
+      console.log(result)
       return result;
     } catch (error) {
       console.error(`Ocurrio un error en el metodo createPerson: ${error.message} del objeto control.js de persona`)
