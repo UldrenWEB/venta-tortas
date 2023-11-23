@@ -180,12 +180,14 @@ class Security {
       // Importa el módulo del objeto de negocio
       const module = await import(path);
 
+
       // Obtiene la clase del objeto de negocio
       const moduleReady = module.default ?? module[object];
 
       // Crea una instancia del objeto de negocio
       const obj = new moduleReady();
 
+      console.log(area, object, method, params)
       // Obtiene el método a ejecutar
       const metodoAEjecutar = obj[method] ?? moduleReady[method];
 
@@ -193,6 +195,7 @@ class Security {
       const methodResult = await metodoAEjecutar(
         ...(typeof params === "object" ? [params] : params)
       );
+
       return methodResult;
     } catch (error) {
       console.error(`Existio un error ${error}`);

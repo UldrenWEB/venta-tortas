@@ -19,7 +19,6 @@ class setProfileController {
 
       const profilesMap = profiles.map((e) => e.de_profile);
 
-      console.log(profilesMap)
       req.session.profiles = profilesMap;
 
       if (profilesMap.length === 1) {

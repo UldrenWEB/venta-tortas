@@ -77,22 +77,30 @@ class seller {
   };
 
   /**
-   * Desactiva un vendedor.
+   * Desactiva o activa un vendedor.
    * @async
    * @param {Object} options - Las opciones para desactivar el vendedor.
    * @param {number} options.idSeller - El ID del vendedor.
    * @returns {Promise<Object>} El resultado de la operación. Si ocurre un error, retorna un objeto con la propiedad `error`.
    */
-  desactivateSeller = async ({ idSeller }) => {
+  changeStatusSeller = async ({ idSeller, option }) => {
     try {
+
+      const options = {
+        desactivate: "desactivateSeller",
+        activate: "activateSeller",
+      }
+
+      if(!options[option]) return false
+
       const result = await iManagerPgHandler.executeQuery({
-        key: "desactivateSeller",
+        key: options[option],
         params: [idSeller],
       });
 
       return result;
     } catch (error) {
-      console.error(`Ocurrio un error en el metodo desactivateSeller: ${error.message} del objeto control.js de seller`)
+      console.error(`Ocurrio un error en el metodo changeStatusSeller: ${error.message} del objeto control.js de seller`)
       return { error: error.message };
     }
   };
@@ -141,26 +149,6 @@ class seller {
   createSeller = async ({ person }) => {
     try {
       const { idPerson } = person;
-      //   const { idLocal } = local;
-
-      //   const personData = !idPerson
-      //     ? await new personControl().createTo({
-      //         option: "person",
-      //         params: person,
-      //       })
-      //     : idPerson;
-
-      //   const localData = !idLocal
-      //     ? await new localControl().insertTo({ to: "local", params: [local] })
-      //     : idLocal;
-
-      //   const seller = await iManagerPgHandler.executeQuery({
-      //     key: "insertSeller",
-      //     params: [personData, localData],
-      //   });
-
-      //TODO: ASI LO HAGO CON TRANSACTION, PERO SE PUEDEN USAR LOS METODOS CONVENCIONALES
-      //TODO: REVISAR QUE ABSOLUTAMENTE TODOS LOS INSERT RETORNEN EL DATO PRINCIPAL
       const personData = !idPerson
         ? { key: "insertPerson", params: person, insertResult: true }
         : { id: idPerson, insertResult: true };
@@ -183,6 +171,7 @@ class seller {
       return { error: error.message };
     }
   };
+
 }
 
 export default seller;
