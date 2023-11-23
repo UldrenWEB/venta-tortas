@@ -61,5 +61,8 @@
   "getAllAddress": "SELECT * FROM person.address",
   "getAllPerson": "SELECT * FROM person.person",
   "getAllPersonWithAddress": "SELECT p.id_person, p.na_person, p.ln_person, p.nu_person, a.de_address, s.na_street, m.na_municipality, c.na_city, st.na_state, co.na_country FROM person.person p INNER JOIN person.address a ON a.id_address = p.id_address INNER JOIN direction.street s ON s.id_street = a.id_street INNER JOIN direction.municipality m ON m.id_municipality = s.id_municipality INNER JOIN direction.city c ON c.id_city = m.id_city INNER JOIN direction.state st ON st.id_state = c.id_state INNER JOIN direction.country co ON co.id_country = st.id_country",
-  "getAllTypePerson": "SELECT * FROM person.tp_person"
+  "getAllTypePerson": "SELECT * FROM person.tp_person",
+  "selectAllLocalByUser": "SELECT lc.de_local FROM local.local lc INNER JOIN local.person_local pl ON pl.id_local = lc.id_local INNER JOIN person.person pp ON pp.id_person = pl.id_person INNER JOIN security.user us ON us.id_person = pp.id_person",
+  "selectOneLocalByUser": "SELECT lc.de_local FROM local.local lc INNER JOIN local.person_local pl ON pl.id_local = lc.id_local INNER JOIN person.person pp ON pp.id_person = pl.id_person INNER JOIN security.user us ON us.id_person = pp.id_person WHERE us.na_user = $1",
+  "selectOneRouteByUser": "SELECT rt.de_route FROM local.local lc INNER JOIN local.route rt ON rt.id_route = lc.id_route INNER JOIN local.person_local pl ON pl.id_local = lc.id_local INNER JOIN person.person pp ON pp.id_person = pl.id_person INNER JOIN security.user us ON us.id_person = pp.id_person WHERE us.na_user = $1"
 }

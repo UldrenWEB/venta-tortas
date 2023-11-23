@@ -13,6 +13,7 @@ class Control {
       const obj = {
         person: "selectLocalByPerson",
         route: "selectLocalByRoute",
+        user: 'selectOneLocalByUser'
       };
 
       if (!obj[byLower]) return false;
@@ -24,32 +25,41 @@ class Control {
 
       return result;
     } catch (error) {
-      return { error };
+      return { error: error.message };
     }
   };
 
   //?Params: idLocal
-  getRouteByLocal = async ({ params }) => {
+  getRouteBy = async ({ option, params }) => {
     try {
+      const optionLower = option.toLowerCase();
+      const obj = {
+        local: "selectRouteByLocal",
+        user: "selectOneRouteByUser",
+      };
+
+      if (!obj[optionLower]) return false;
+
       const result = await iManagerPgHandler.executeQuery({
-        key: "selectRouteByLocal",
+        key: obj[optionLower],
         params: params,
       });
 
       return result;
     } catch (error) {
-      return { error };
+      return { error: error.message };
     }
   };
 
   //?of: local (allLocals)|| route(allRoutes) || localroute (allTwo)
-  getAllOf = async ({ of }) => {
+  getAllOf = async (of) => {
     try {
       const ofLower = of.toLowerCase();
       const obj = {
         local: "selectAllLocal",
         route: "selectAllRoute",
         localroute: "selectAllRouteAndLocal",
+        localuser: "selectAllLocalByUser"
       };
 
       if (!obj[ofLower]) return false;

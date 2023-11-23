@@ -21,6 +21,11 @@ class SocketServer {
 
     this.dbMessage = new Message();
     this.local = new Control();
+
+    //!Prueba
+    // this.#getRooms().then(data => {
+    //   console.log('Estos son los locales por usuario', data)
+    // })
   }
 
   #createServer = (app) => {
@@ -55,21 +60,19 @@ class SocketServer {
   //Los rooms son un arreglo de nombres de los diferentes rooms
   #getRoutes = async () => {
     try {
-      const routes = await this.local.getAllOf({
-        of: "route",
-      });
+      const route = await this.local.getAllOf('route');
 
-      let arrayRoutes = [];
-      routes.forEach((obj) => {
-        arrayRoutes.push(obj["de_route"]);
+      let arrayRoute = [];
+      route.forEach((obj) => {
+        arrayRoute.push(obj["de_route"]);
       });
-      return arrayRoutes;
+      return arrayRoute;
     } catch (error) {
       return { error: error.message };
     }
   };
 
-  #createRoom = async () => {
+  #getRooms = async () => {
     try {
       const array = await this.#getRoutes();
       console.log(array);
@@ -93,7 +96,7 @@ class SocketServer {
       console.log("Un usuario se acaba de conectar", this.socketMap.has(socket.handshake.query.user));
 
       socket.on("file", async (data) => {
-        const rooms = await this.#createRoom();
+        const rooms = await this.#getRooms();
         const { destination, file, user, typeFile, message } = data;
         const date = this.#getDateNow("mm/dd/yyyy");
         try {
@@ -195,7 +198,7 @@ class SocketServer {
 
       socket.on("message zone", async (data) => {
         try {
-          const rooms = await this.#createRoom();
+          const rooms = await this.#getRooms();
           if (!rooms) return console.log('Hubo un error al crear los socket');
 
           const { room, message } = data;
