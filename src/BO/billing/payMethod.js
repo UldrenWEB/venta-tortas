@@ -39,8 +39,8 @@ class payMethod {
       const optionLower = option.toLowerCase();
       const obj = {
         bank: "insertBank",
-        methodOther: "insertMethodOther",
-        methodBank: "insertMethodBank",
+        methodother: "insertMethodOther",
+        methodbank: "insertMethodBank",
       };
 
       if (!obj[optionLower]) return false;
@@ -65,8 +65,8 @@ class payMethod {
       const optionLower = option.toLowerCase();
       const obj = {
         bank: "updateBank",
-        methodOther: "updateMethodOther",
-        methodBank: "updateMethodBank",
+        methodother: "updateMethodOther",
+        methodbank: "updateMethodBank",
       };
 
       if (!obj[optionLower]) return false;
