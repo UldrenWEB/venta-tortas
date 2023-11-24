@@ -85,7 +85,7 @@ class Session {
    */
   midSessionExist = (req, res, next) => {
     if (this.sessionExist(req)) return next();
-    return res.status(401).json({ error: "No tienes sesion activa" });
+    return res.status(401).json({ errorSession: "No tienes sesion activa" });
   };
 
   /**

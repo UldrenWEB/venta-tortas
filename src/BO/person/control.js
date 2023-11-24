@@ -180,9 +180,7 @@ class control {
       });
 
       const querys = [queryPerson, ...querysType, ];
-      console.log(querys)
       const result = await iManagerPgHandler.transaction({ querys });
-      console.log(result)
       return result;
     } catch (error) {
       console.error(`Ocurrio un error en el metodo createPerson: ${error.message} del objeto control.js de persona`)

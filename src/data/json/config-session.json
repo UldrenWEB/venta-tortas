@@ -5,7 +5,8 @@
   "cookie": {
     "maxAge": 600000000,
     "name": "cookie-tortas",
-    "secure": false
+    "secure": false,
+    "httpOnly": false
   },
   "rolling": true,
   "proxy": false

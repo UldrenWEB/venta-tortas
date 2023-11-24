@@ -50,11 +50,14 @@ class ManagerPgHandler {
    * @returns {Promise<Boolean>} - Una promesa que resuelve con un booleano indicando si la consulta fue exitosa o un error.
    */
   execute = async ({ key, params }) => {
+    console.log(this.querys[key])
     try {
       let rowCount = await this.pgHandler.execute({
         query: this.querys[key],
         params: params,
       });
+
+      console.log(rowCount)
 
       return rowCount > 0;
     } catch (error) {

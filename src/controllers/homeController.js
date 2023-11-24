@@ -23,7 +23,8 @@ class HomeController {
       const json = {
         userProfile: profile,
         message: `Estos son los metodos que tienes disponibles con el perfil que iniciaste, con /toProcess puedes ejecutarlos`,
-        permissions: infoProfile
+        permissions: infoProfile,
+        profileData: req.session
       };
 
       return res.json(json);
