@@ -48,7 +48,7 @@ class LoginController {
     try {
       const userBlocked = await UserModel.verifyBlock({ user: req.body.user });
       if (userBlocked)
-        return res.status(404).json({ message: "Usuario bloqueado" });
+        return res.status(404).json({ error: "Usuario bloqueado" });
     } catch (error) {
       return { error };
     }

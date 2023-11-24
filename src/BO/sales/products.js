@@ -83,12 +83,8 @@ class Products {
 
   //?option: product, presentation, productsale
   //?params: deProduct || dePresentation || (idProducto, idPresentacion, monto)
-<<<<<<< HEAD
   insertTo = async ({ option, params }) => {
     console.log(option, params)
-=======
-  insertTo = async (option, params) => {
->>>>>>> 0ad790cc7ec2b150b58e3bb26ae1dadc98a884f8
     try {
       const optionLower = option.toLowerCase();
       const obj = {
