@@ -180,7 +180,6 @@ class Security {
       // Importa el módulo del objeto de negocio
       const module = await import(path);
 
-
       // Obtiene la clase del objeto de negocio
       const moduleReady = module.default ?? module[object];
 

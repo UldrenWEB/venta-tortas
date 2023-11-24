@@ -160,32 +160,32 @@ class Control {
       return { error: error.message };
     }
   };
+
+  getAll = async ({ direction }) => {
+    try {
+      const directionLower = direction.toLowerCase();
+      const obj = {
+        direction: "selectAllDirection",
+        address: "selectAllAdress",
+        country: "selectAllCountries",
+        state: "selectAllStates",
+        city: "selectAllCities",
+        municipality: "selectAllMuni",
+        street: "selectAllStreet",
+      };
+  
+  
+      if (!obj[directionLower]) return false;
+  
+      const result = iManagerPgHandler.executeQuery({
+        key: obj[directionLower],
+      });
+  
+      return result;
+    } catch (error) {
+      return { error: error.message };
+    }
+  };
 }
-
-getAll = async ({ direction }) => {
-  try {
-    const directionLower = direction.toLowerCase();
-    const obj = {
-      direction: "selectAllDirection",
-      address: "selectAllAdress",
-      country: "selectAllCountries",
-      state: "selectAllStates",
-      city: "selectAllCities",
-      municipality: "selectAllMuni",
-      street: "selectAllStreet",
-    };
-
-
-    if (!obj[directionLower]) return false;
-
-    const result = iManagerPgHandler.executeQuery({
-      key: obj[directionLower],
-    });
-
-    return result;
-  } catch (error) {
-    return { error: error.message };
-  }
-};
 
 export default Control;

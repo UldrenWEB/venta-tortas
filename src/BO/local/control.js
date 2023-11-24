@@ -32,7 +32,7 @@ class Control {
   //?Params: idLocal
   getRouteBy = async ({ option, params }) => {
     try {
-      const optionLower = option.toLowerCase();
+      const optionLower = Array.isArray(option) ? option[0].toLowerCase() : option.toLowerCase();
       const obj = {
         local: "selectRouteByLocal",
         user: "selectOneRouteByUser",
@@ -54,7 +54,7 @@ class Control {
   //?of: local (allLocals)|| route(allRoutes) || localroute (allTwo)
   getAllOf = async (of) => {
     try {
-      const ofLower = of.toLowerCase();
+      const ofLower = Array.isArray(of) ? of[0].toLowerCase() : of.toLowerCase();
       const obj = {
         local: "selectAllLocal",
         route: "selectAllRoute",
@@ -70,7 +70,8 @@ class Control {
 
       return result;
     } catch (error) {
-      return { error };
+      console.error(`Ocurrio un error en el metodo getAllOf del objeto control.js en el modulo local, error: ${error.message}` )
+      return { error: error.message };
     }
   };
 
@@ -78,7 +79,7 @@ class Control {
   //?params: insertar en local || routen (nombre o descripcion)
   insertTo = async ({ to, params }) => {
     try {
-      const toLower = to.toLowerCase();
+      const toLower = Array.isArray(to) ? to[0].toLowerCase() : to.toLowerCase();
       const obj = {
         local: "insertLocal",
         route: "insertRoute",
@@ -115,7 +116,7 @@ class Control {
   //?params: (solo se puede editar el nombre de la ruta y local)
   editTo = async ({ to, params }) => {
     try {
-      const toLower = to.toLowerCase();
+      const toLower = Array.isArray(to) ? to[0].toLowerCase() : to.toLowerCase();
       const obj = {
         local: "updateLocal",
         route: "updateRoute",

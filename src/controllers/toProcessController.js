@@ -37,7 +37,8 @@ class ToProcessController {
         return res.json({ error: "No tienes permiso para ejecutar este método" });
       }
     } catch (error) {
-      return res.json({ error });
+      console.error(`Ocurrio un error en el metodo toProcessPost del objeto toProcessController.js, error: ${error.message}`)
+      return res.json({ error: error.message });
     }
   };
 
