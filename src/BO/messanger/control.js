@@ -93,7 +93,7 @@ class Control {
                 messagenames: 'insertNewMessageSubconsulta',
                 image: 'insertNewImage'
             }
-            if (obj[optionLower]) return false;
+            if (!obj[optionLower]) return false;
 
             const modified = await iManagerPgHandler.execute({
                 key: obj[optionLower],
