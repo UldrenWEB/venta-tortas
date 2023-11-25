@@ -167,7 +167,7 @@ class SocketServer {
       });
 
       socket.on("general message", async (data) => {
-        const { socket, namespace, message } = data;
+        const { namespace, message } = data;
         const date = this.#getDateNow("mm/dd/yyyy");
         const { user } = socket.handshake.query;
 
@@ -175,24 +175,28 @@ class SocketServer {
           `Envias por el nameSpace ${namespace} el mensaje de ${message}, el dia de ${date}`
         );
 
-        if (this.namespace === namespace) {
-          try {
-            const bool = await this.#iterator({
-              userEmit: user,
-              map: this.socketMap,
-              typeMessage: "broadcast",
-              message: message,
-              option: "messageNames",
-              date: date,
-            });
-            if (!bool || bool.error) return console.error('Hubo un error al insertar un mensaje en la base de datos', bool.error);
-
-            return this.io.to(namespace).emit("broadcast_message", { message });
-          } catch (error) {
-            return { error: error.message };
-          }
+        // if (this.namespace === namespace) {
+        //   try {
+        //     const bool = await this.#iterator({
+        //       userEmit: user,
+        //       map: this.socketMap,
+        //       typeMessage: "broadcast",
+        //       message: message,
+        //       option: "messageNames",
+        //       date: date,
+        //     });
+        //     if (!bool || bool.error) return console.error('Hubo un error al insertar un mensaje en la base de datos', bool.error);
+        let keyUer;
+        for (let [key, value] of this.socketMap.entries()) {
+          console.log(key)
+          if (user !== key) keyUer = key
         }
-        return console.error("Es incorrecto el nameSpace, verifique");
+        return this.io.to(namespace).except(socket.id).emit("broadcast_message", { contenido: message, usuario: user, fecha: date, receptor: this.socketMap.get(keyUer) });
+        // } catch (error) {
+        return { error: error.message };
+        // }
+        // }
+        // return console.error("Es incorrecto el nameSpace, verifique");
         //Para emitir el mensaje a todos
       });
 
@@ -278,13 +282,16 @@ class SocketServer {
   };
   #iterator = async ({ map, userEmit, typeMessage, date, option, message }) => {
     try {
-      for (let key of map) {
+      console.log('Entro aqui al iterator', userEmit, typeMessage, date, option, message)
+      for (let [key, value] of map.entries()) {
+        console.log(key)
         //Esto se hace para que no pueda insertar en la base de datos que el mismo que la envio salga que el mismo recibio su mensaje
         if (key !== userEmit) {
           const modified = await this.dbMessage.insertTo({
             option: option,
             params: [userEmit, key, typeMessage, message, date],
           });
+          console.log(modified)
           if (!modified) return false;
         }
       }
