@@ -48,10 +48,10 @@ class PgHandler {
     await client.query("BEGIN");
 
     try {
-      const { rowCount } = await client.query(query, params);
+      const result = await client.query(query, params);
       await client.query("COMMIT");
 
-      return rowCount;
+      return result;
     } catch (error) {
       return { error };
     } finally {
@@ -68,7 +68,7 @@ class PgHandler {
     try {
       return await this.pool.connect();
     } catch (error) {
-      return { error: error.message};
+      return { error: error.message };
     }
   };
 

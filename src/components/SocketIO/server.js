@@ -91,10 +91,10 @@ class SocketServer {
 
   #onConnection = (socket) => {
     try {
-      const bool = this.#saveSocket(socket, this.socketMap);
-      if (!bool) return false;
+      this.#saveSocket(socket, this.socketMap);
 
-      console.log("Un usuario se acaba de conectar", this.socketMap.has(socket.handshake.query.user));
+      console.log("Un usuario se acaba de conectar el usuario --", socket.handshake.query.user);
+      console.log('Este es el mapa, ', this.socketMap);
 
       socket.on("file", async (data) => {
         const rooms = await this.#getRooms();
@@ -173,20 +173,20 @@ class SocketServer {
         const { user } = socket.handshake.query;
 
         console.log(
-          `Envias por el nameSpace ${namespace} el mensaje de ${message}, el dia de ${date}`
+          `Eres ${user} y envias por el nameSpace ${namespace} el mensaje de ${message}, el dia de ${date}`
         );
 
         if (this.namespace === namespace) {
           try {
-            // const bool = await this.#iterator({
-            //   userEmit: user,
-            //   map: this.socketMap,
-            //   typeMessage: "broadcast",
-            //   message: message,
-            //   option: "messageNames",
-            //   date: date,
-            // });
-            // if (!bool || bool.error) return console.error('Hubo un error al insertar un mensaje en la base de datos', bool.error);
+            const bool = await this.#iterator({
+              userEmit: user,
+              map: this.socketMap,
+              typeMessage: "broadcast",
+              message: message,
+              option: "messageNames",
+              date: date,
+            });
+            if (!bool || bool.error) return console.error('Hubo un error al insertar un mensaje en la base de datos', bool.error);
 
             return this.io.to(namespace).except(socket.id).emit("broadcast_message", { contenido: message, usuario: user, fecha: date, emisor: user });
           } catch (error) {
@@ -222,7 +222,7 @@ class SocketServer {
           });
           if (!bool || bool.error) return console.log('Hubo un error al cargar un mensaje en la base de datos', bool.error);
 
-          return this.io.to(room).emit("room_message", { message });
+          return this.io.to(room).except(socket.id).emit("room_message", { contenido: message, usuario: user, fecha: date });
         } catch (error) {
           return { error: error.message };
         }
@@ -280,20 +280,15 @@ class SocketServer {
   #iterator = async ({ map, userEmit, typeMessage, date, option, message }) => {
     try {
       const userLower = userEmit.toLowerCase();
-      console.log('Entro aqui al iterator', userLower, typeMessage, date, option, message)
       for (let [key, value] of map.entries()) {
-        console.log(key)
         let keyLower = key.toLowerCase();
         //Esto se hace para que no pueda insertar en la base de datos que el mismo que la envio salga que el mismo recibio su mensaje
-        console.log('Aqui el usuario que recibe y que emite', keyLower, userLower)
-        console.log(typeof keyLower === 'string')
-        if (keyLower !== userLower && keyLower !== undefined) {
-          console.log('Paso aqui dentro del if que no deberia', keyLower, userLower)
+        if (keyLower !== userLower) {
+          console.log('Pasa a guardar un mensaje en bucle en la base de datos');
           const modified = await this.dbMessage.insertTo({
             option: option,
             params: [userLower, keyLower, typeMessage, message, date],
           });
-          console.log('Aqui modifed', modified)
           if (!modified) return false;
         }
       }
@@ -306,14 +301,11 @@ class SocketServer {
   #saveSocket = (socket, map) => {
     const { user, profile } = socket.handshake.query;
 
-    if (!user) return false;
-
-    console.log('No es undefined', user)
     const obj = {
       id: socket.id,
       profile: profile,
     };
-    return map.set(user, obj);
+    map.set(user, obj);
   };
 
   #getDateNow = (format) => {
