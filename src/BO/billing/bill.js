@@ -111,7 +111,7 @@ class Bill {
         params: [amount, idBill]
       }
 
-      const transaction = iManagerPgHandler.transaction({
+      const transaction = await iManagerPgHandler.transaction({
         querys: [pay, methodPay, reduceDebt]
       })
 
@@ -167,7 +167,7 @@ class Bill {
   };
   getAll = async ({ option, idBill }) => {
     try {
-      const optionLower = options.toLowerCase();
+      const optionLower = option.toLowerCase();
       const options = {
         bills: 'selectAllBills',
         items: 'selectAllItemsByBill'
