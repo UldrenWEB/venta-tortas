@@ -114,7 +114,7 @@ class PgHandler {
         let finalParams;
 
         if (id) {
-          finalParams = [id] ; //Aqui tenia ...params, pero lo quite porque daba error.
+          finalParams = [id]; //Aqui tenia ...params, pero lo quite porque daba error.
           if (insertResult) {
             resultAlmacenado = id
             insertResult = null;

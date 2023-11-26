@@ -5,7 +5,7 @@ import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 class Products {
   constructor() { }
 
-  getAll = async (option) => {
+  getAll = async ({ option }) => {
     try {
       const optionLower = option.toLowerCase();
       const obj = {

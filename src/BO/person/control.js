@@ -179,7 +179,7 @@ class control {
         return obj;
       });
 
-      const querys = [queryPerson, ...querysType, ];
+      const querys = [queryPerson, ...querysType,];
       const result = await iManagerPgHandler.transaction({ querys });
       return result;
     } catch (error) {

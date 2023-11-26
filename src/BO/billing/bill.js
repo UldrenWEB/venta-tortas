@@ -1,3 +1,4 @@
+import { date } from "zod";
 import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 
 class Bill {
@@ -44,36 +45,41 @@ class Bill {
    */
 
   //!Params orden:[naSeller, naClient] 
-  createBill = async ({ products = [], params, statusInitial, dateLimit }) => {
+  createBill = async ({ products = [], params, dateLimit }) => {
     try {
+      console.log('Elementos para crear la factura', params[0], params[1], dateLimit, products)
+      //True es que esta pendiente y false que esta pagada
       const dateNow = this.#getDateNow('mm/dd/yyyy');
-      const isAddDebt = statusInitial === 'pagada' ? false : true;
+
+      const statusDe = dateLimit == false ? 'pagada' : 'pendiente'
+
       const idStatus = await iManagerPgHandler.returnByProp({
         key: 'selectStatusBillByName',
-        params: [statusInitial],
+        params: [statusDe],
         prop: 'id_status_bill'
       })
 
+      console.log('EL estatus segun se quiera', idStatus);
       const resultId = await iManagerPgHandler.execute({
         key: 'insertBill',
         params: [...params, idStatus, dateNow]
       })
-      const idBill = resultId.id_bill
+      const idBill = resultId['id_bill']
       if (!idBill) return false;
 
-      if (isAddDebt) {
-        await this.#addDebt({
+      if (statusDe === 'pendiente') {
+        const probe = await this.#addDebt({
           idBill: idBill,
           dateLimit: dateLimit
         })
+        console.log('Probando crear la deuda', probe)
       }
 
       products.forEach(async product => {
-        const insertRows = await iManagerPgHandler.execute({
+        await iManagerPgHandler.execute({
           key: 'insertRowByIdBillAndDeProduct',
           params: [idBill, product]
         })
-        if (!insertRows || insertRows.error) return false;
       })
 
       return true;
@@ -91,7 +97,7 @@ class Bill {
 
       const that = await this.verifyPayBill({ idBill })
 
-      if (!that.debit) return console.log('No debe, por lo que no puede pagar')
+      if (!that.debit) return { errorPay: 'El usuario no debe' }
 
       if (that.error || !that) return { error: 'Hubo un error al verificar la deuda del cliente en el metodo verifyPayBill' }
 
