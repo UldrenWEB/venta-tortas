@@ -108,17 +108,22 @@ class PgHandler {
     try {
       await client.query("BEGIN");
       for (const elemento of querys) {
+        console.log(elemento)
         const { key, params, id } = elemento;
         let insertResult = elemento.insertResult;
         let finalParams;
 
         if (id) {
-          finalParams = [id, ...params];
+          finalParams = [id] ; //Aqui tenia ...params, pero lo quite porque daba error.
+          if (insertResult) {
+            resultAlmacenado = id
+            insertResult = null;
+          }
           continue;
         } else {
           finalParams = resultAlmacenado
             ? [resultAlmacenado, ...params]
-            : params;
+            : [...params];
         }
 
         const result = await client.query(objQuerys[key], finalParams);

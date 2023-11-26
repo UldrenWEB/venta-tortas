@@ -37,7 +37,7 @@ class PayMethod {
   //* Bank - params
   addTo = async ({ option, params }) => {
     try {
-      const optionLower = option.toLowerCase();
+      const optionLower = Array.isArray(option) ? option[0].toLowerCase() : option.toLowerCase();
       const obj = {
         bank: "insertBank",
         methodother: "insertPayMethodOther",
@@ -60,7 +60,34 @@ class PayMethod {
     }
   };
 
-  //? option: - bank, methodBank - methodOther
+  //? option: - Bank - methodOther - methodBank
+  editTo = async ({ option, params }) => {
+    try {
+      const optionLower = option.toLowerCase();
+      const obj = {
+        bank: "updateBank",
+        methodother: "updateMethodOther",
+        methodbank: "updateMethodBank",
+      };
+
+      if (!obj[optionLower]) return false;
+
+      const result = await iManagerPgHandler.execute({
+        key: obj[optionLower],
+        params,
+      });
+
+      return result;
+    } catch (error) {
+      console.error(
+        `Ocurrio un error en el metodo editTo: ${error.message} del objeto payMethods.js de billing`
+      );
+      return { error: error.message };
+    }
+  };
+
+  //TODO: AQUI FALTA EL DEL BANCO QUE AHORA TAMBIEN TIENE ESTATUS 
+  //? option: - methodBank - methodOther
   setStatusPayMethod = async ({ option, value }) => {
     try {
       const optionLower = option.toLowerCase();
