@@ -44,7 +44,7 @@ class seller {
    * @returns {Promise<Array>}
    */
   //TODO: Pendiente aqui ya que con el toLowerCase todas las letras seran minusculas por lo que nunca coincidira si una propiedad tiene mayusculas
-  getSellersBy = async ({ option = "default", params }) => {
+  getSellersBy = async ({ option = "default", params = [] }) => {
     try {
       const objLower = option.toLowerCase();
 
@@ -93,7 +93,7 @@ class seller {
 
       if(!options[option]) return false
 
-      const result = await iManagerPgHandler.executeQuery({
+      const result = await iManagerPgHandler.execute({
         key: options[option],
         params: [idSeller],
       });
@@ -119,13 +119,15 @@ class seller {
       const querys = [];
 
       for (const key of localData) {
-        const { idLocal } = key;
+        console.log(key)
+        const idLocal  = key;
         const localInfo = !idLocal
           ? { key: "insertLocal", params: local, insertResult: true }
           : { id: idLocal, insertResult: true };
         const seller = { key: "asignLocalSeller", params: [idSeller] };
 
-        localData.push(localInfo, seller);
+        const final = [localInfo, seller];
+        querys.push(...final);
       }
       const result = await iManagerPgHandler.transaction({ querys });
       return result;
@@ -133,7 +135,7 @@ class seller {
       console.error(`Ocurrio un error en el metodo asignLocalSeller: ${error.message} del objeto control.js de seller`)
       return { error: error.message };
     }
-  };
+  };  
 
   /**
    * Crea un vendedor.

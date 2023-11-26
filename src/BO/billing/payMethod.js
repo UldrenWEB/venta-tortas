@@ -36,7 +36,7 @@ class payMethod {
   //* Bank - params
   addTo = async ({ option, params }) => {
     try {
-      const optionLower = option.toLowerCase();
+      const optionLower = Array.isArray(option) ? option[0].toLowerCase() : option.toLowerCase();
       const obj = {
         bank: "insertBank",
         methodother: "insertMethodOther",
@@ -62,7 +62,7 @@ class payMethod {
   //? option: - Bank - methodOther - methodBank
   editTo = async ({ option, params }) => {
     try {
-      const optionLower = option.toLowerCase();
+      const optionLower =  Array.isArray(option) ? option[0].toLowerCase() : option.toLowerCase();
       const obj = {
         bank: "updateBank",
         methodother: "updateMethodOther",

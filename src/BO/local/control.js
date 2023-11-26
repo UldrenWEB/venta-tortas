@@ -9,11 +9,12 @@ class Control {
   //?Params: idPerson || idRoute
   getLocalBy = async ({ by, params }) => {
     try {
-      const byLower = by.toLowerCase();
+      const byLower = Array.isArray(by) ? by[0].toLowerCase() : by.toLowerCase();
       const obj = {
         person: "selectLocalByPerson",
         route: "selectLocalByRoute",
-        user: 'selectOneLocalByUser'
+        user: 'selectOneLocalByUser',
+        routeall: 'selectLocalByRouteAll'
       };
 
       if (!obj[byLower]) return false;
@@ -22,6 +23,7 @@ class Control {
         key: obj[byLower],
         params: params,
       });
+
 
       return result;
     } catch (error) {
