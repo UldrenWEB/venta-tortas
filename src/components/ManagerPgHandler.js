@@ -56,11 +56,10 @@ class ManagerPgHandler {
         query: this.querys[key],
         params: params,
       });
-
+      // console.log(command, rows, rowCount)
       if (command === 'DELETE' || command === 'UPDATE' || command === 'INSERT') {
         return rows;
       }
-
       return rowCount > 0;
     } catch (error) {
       console.error(`Ocurrio un error en el metodo execute: ${error.message} del objeto ManagerPgHandler.js`)

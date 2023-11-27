@@ -1,7 +1,6 @@
-import { date } from "zod";
 import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 
-class Bill {
+class bill {
 
   //<--- Se llama cada vez que se hace un pago, ve si ya toda la factura esta pagada para cambiar el estatus
   verifyPayBill = async ({ idBill }) => {
@@ -17,8 +16,8 @@ class Bill {
 
       if (!totalBill || totalBill.error || !totalPaid || totalPaid.error) return false;
 
-      const result = totalPaid >= totalBill
-      if (result >= 0) {
+      const result = totalBill - totalPaid
+      if (result <= 0) {
         console.log('Se cambiara el estado porque cumplio su deuda')
         const modified = await this.#changeStatusBill({
           idBill
@@ -26,9 +25,10 @@ class Bill {
 
         if (!modified || modified.error) return false;
 
-        return { debit: result };
+        return { debit: false };
       }
-      return { debit: true }
+
+      return { debit: result }
     } catch (error) {
       console.error(
         `Ocurrio un error en el metodo #verifyPayBill: ${error.message} del objeto bill.js de billing`
@@ -47,7 +47,7 @@ class Bill {
   //!Params orden:[naSeller, naClient] 
   createBill = async ({ products = [], params, dateLimit }) => {
     try {
-      console.log('Elementos para crear la factura', params[0], params[1], dateLimit, products)
+      console.log('Aqui productos', products)
       //True es que esta pendiente y false que esta pagada
       const dateNow = this.#getDateNow('mm/dd/yyyy');
 
@@ -59,12 +59,12 @@ class Bill {
         prop: 'id_status_bill'
       })
 
-      console.log('EL estatus segun se quiera', idStatus);
-      const resultId = await iManagerPgHandler.execute({
+      const [resultId] = await iManagerPgHandler.execute({
         key: 'insertBill',
         params: [...params, idStatus, dateNow]
       })
       const idBill = resultId['id_bill']
+
       if (!idBill) return false;
 
       if (statusDe === 'pendiente') {
@@ -75,18 +75,33 @@ class Bill {
         console.log('Probando crear la deuda', probe)
       }
 
-      products.forEach(async product => {
-        await iManagerPgHandler.execute({
-          key: 'insertRowByIdBillAndDeProduct',
-          params: [idBill, product]
-        })
+      const insertProducts = await this.#insertRows({
+        idBill,
+        arrayProducts: products
       })
+      if (!insertProducts || insertProducts.error) return false;
 
       return true;
     } catch (error) {
       return { error: error.message }
     }
   };
+
+  #insertRows = async ({ idBill, arrayProducts }) => {
+    try {
+      Promise.all(arrayProducts.map(async (product) => {
+        await iManagerPgHandler.execute({
+          key: 'insertRowByIdBillAndDeProduct',
+          params: [idBill, Number(product)]
+        });
+      }));
+
+      return true;
+    } catch (error) {
+      console.log(error)
+      return { error: error.message }
+    }
+  }
 
   //TypePay = bank || other
   //Cuando se pague se tiene que especificar el tipo de pago si sera de banco o de otro y adicional se tienen que pasar los parametros necesarios si sera a un banco pues el banco y el metodo de pago y si es a otro entonces el metodo de pago
@@ -136,11 +151,13 @@ class Bill {
         idBill
       })
 
+      console.log('Total de la factura', totalBill)
       const modified = await iManagerPgHandler.execute({
         key: 'insertDebt',
         params: [idBill, totalBill, dateLimit]
       })
 
+      console.log('No se inserto bien la deuda verificar');
       return modified
     } catch (error) {
       return { error: error.message }
@@ -269,4 +286,4 @@ class Bill {
   }
 }
 
-export default Bill;
+export default bill;

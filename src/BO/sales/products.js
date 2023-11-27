@@ -2,7 +2,7 @@
 
 import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 
-class Products {
+class products {
   constructor() { }
 
   getAll = async ({ option }) => {
@@ -53,13 +53,12 @@ class Products {
   };
 
   //?params: idProduct
-  getAllPresentationByProduct = async (params) => {
+  getAllPresentationByProduct = async ({ params }) => {
     try {
       const result = await iManagerPgHandler.executeQuery({
         key: "selectPresentationByProduct",
-        params: params,
+        params: [params],
       });
-
       return result;
     } catch (error) {
       return { error: error.message };
@@ -173,4 +172,4 @@ class Products {
   };
 }
 
-export default Products;
+export default products;

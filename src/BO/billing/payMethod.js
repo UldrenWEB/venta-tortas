@@ -1,6 +1,6 @@
 import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 
-class PayMethod {
+class payMethod {
 
   getAll = async ({ option }) => {
     try {
@@ -21,9 +21,8 @@ class PayMethod {
       const [query, param] = obj[optionLower]
       const result = await iManagerPgHandler.executeQuery({
         key: query,
-        params: [param],
+        params: !param ? param : [param],
       });
-
       return result;
     } catch (error) {
       console.error(
@@ -120,4 +119,4 @@ class PayMethod {
     }
   };
 }
-export default PayMethod;
+export default payMethod;
