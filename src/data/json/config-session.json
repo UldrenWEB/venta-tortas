@@ -3,11 +3,11 @@
   "resave": true,
   "saveUninitialized": true,
   "cookie": {
-    "maxAge": 600000000,
+    "maxAge": 600000000000,
     "name": "cookie-tortas",
     "secure": false,
     "httpOnly": false
   },
-  "rolling": true,
+  "rolling": false,
   "proxy": false
 }

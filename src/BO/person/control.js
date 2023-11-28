@@ -41,6 +41,7 @@ class control {
    */
   editTo = async ({ option, params = [] }) => {
     try {
+
       const byLower = option.toLowerCase();
       const objQuerys = {
         person: "updatePerson",
@@ -49,9 +50,9 @@ class control {
 
       if (!objQuerys[byLower]) return false;
 
-      const result = await iManagerPgHandler.executeQuery({
+      const result = await iManagerPgHandler.execute({
         key: objQuerys[byLower],
-        params: params,
+        params,
       });
 
       return result;
@@ -67,7 +68,7 @@ class control {
    * @param {string} options.option - El tipo de elementos a obtener. Puede ser "person", "address", "typePerson" o "getAllPersonWithAddress".
    * @returns {Promise} - Una promesa que resuelve con el resultado de la consulta o un error.
    */
-  getAllOf = async ({ option }) => {
+  getAllOf = async ({ option, params }) => {
     try {
       const byLower = option.toLowerCase();
       const objQuerys = {
@@ -75,12 +76,15 @@ class control {
         address: "getAllAddress",
         typeperson: "getAllTypePerson",
         getallpersonwithaddress: "getAllPersonWithAddress",
+        oneperson: "getOnePerson", 
+        alltypesalary: "getAllTypeSalary",
       };
 
       if (!objQuerys[byLower]) return false;
 
       const result = await iManagerPgHandler.executeQuery({
         key: objQuerys[byLower],
+        params
       });
 
       return result;

@@ -32,6 +32,7 @@ class PgHandler {
    */
   executeQuery = async ({ query, params = [] }) => {
     try {
+
       const client = await this.#connect();
 
       const { rows } = await client.query(query, params);
@@ -109,10 +110,11 @@ class PgHandler {
     try {
       await client.query("BEGIN");
       for (const elemento of querys) {
-        console.log(elemento)
         const { key, params, id } = elemento;
         let insertResult = elemento.insertResult;
         let finalParams;
+
+        console.log(elemento)
 
         if (id) {
           finalParams = [id]; //Aqui tenia ...params, pero lo quite porque daba error.
@@ -141,9 +143,9 @@ class PgHandler {
       const result = await client.query("COMMIT");
       return result;
     } catch (error) {
-      // console.log(error)
+      console.log(`Ocurrio un error en el metodo transaction: ${error.message} del objeto ManagerPgHandler.js`)
       await client.query("ROLLBACK");
-      return { error };
+      return { error: error.message };
     } finally {
       await client.release();
     }

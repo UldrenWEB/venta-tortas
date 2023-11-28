@@ -24,6 +24,8 @@ class ToProcessController {
         method,
       });
 
+      // console.log(`Tiene permiso? ${permiso} - Linea 27 toProcessController`)
+
       if (permiso) {
         const resultMethod = await iSecurity.executeMethod({
           area,

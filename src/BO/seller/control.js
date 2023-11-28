@@ -176,4 +176,6 @@ class seller {
 
 }
 
+
+
 export default seller;
