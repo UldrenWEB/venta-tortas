@@ -149,7 +149,7 @@ class Security {
       try {
         const permiso = this.permissions
           .get(profile)
-          [area][object].includes(method);
+          [area][object].map(permission => permission.toLowerCase()).includes(method.toLowerCase());
         return permiso ? true : false;
       } catch (error) {
         return false;
