@@ -57,6 +57,7 @@ class ManagerPgHandler {
         params: params,
       });
       // console.log(command, rows, rowCount)
+      console.log('Query', this.querys[key], 'rowCount', rowCount, 'rows', rows);
       if (command === 'DELETE' || command === 'UPDATE' || command === 'INSERT') {
         return rows;
       }
