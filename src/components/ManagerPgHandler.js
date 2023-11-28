@@ -74,10 +74,13 @@ class ManagerPgHandler {
    */
   executeQuery = async ({ key, params }) => {
     try {
+      // console.log(`${this.querys[key]} <-- Linea 77 ManagerPgHandler.js`)
       const result = await this.pgHandler.executeQuery({
         query: this.querys[key],
         params: params,
       });
+
+      // console.log(result)
 
       return result.length > 0 ? result : false;
     } catch (error) {

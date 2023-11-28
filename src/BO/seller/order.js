@@ -1,8 +1,10 @@
+import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
+
 class order {
   asignTypePay = async ({ idSeller, idTypePay }) => {
     try {
-      const result = await iManagerPgHandler.executeQuery({
-        key: "asignTypePaySeller",
+      const result = await iManagerPgHandler.execute({
+        key: "asignTypeSalarySeller",
         params: [idSeller, idTypePay],
       });
 
