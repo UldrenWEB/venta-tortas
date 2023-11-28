@@ -54,7 +54,7 @@ class Control {
   };
 
   //?of: local (allLocals)|| route(allRoutes) || localroute (allTwo)
-  getAllOf = async (of) => {
+  getAllOf = async ({ of }) => {
     try {
       const ofLower = Array.isArray(of) ? of[0].toLowerCase() : of.toLowerCase();
       const obj = {
@@ -72,7 +72,7 @@ class Control {
 
       return result;
     } catch (error) {
-      console.error(`Ocurrio un error en el metodo getAllOf del objeto control.js en el modulo local, error: ${error.message}` )
+      console.error(`Ocurrio un error en el metodo getAllOf del objeto control.js en el modulo local, error: ${error.message}`)
       return { error: error.message };
     }
   };
@@ -138,11 +138,11 @@ class Control {
   };
 
   //?params: idRoute
-  deleteRoute = async ({ params }) => {
+  deleteRoute = async ({ id }) => {
     try {
       const deleteRoute = {
         key: "deleteRoute",
-        params: params,
+        params: [id],
       };
 
       const deleteLocal = {
@@ -161,11 +161,11 @@ class Control {
   };
 
   //?params idLocal
-  deleteLocal = async ({ params }) => {
+  deleteLocal = async ({ id }) => {
     try {
       const deleteLocal = {
         key: "deleteLocal",
-        params: params,
+        params: [id],
       };
 
       const deletePersonLocal = {

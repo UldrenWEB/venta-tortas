@@ -126,24 +126,24 @@ class Control {
         }
     }
 
-    deleteMessage = async ({ params }) => {
+    deleteMessage = async ({ id }) => {
         try {
             //Primero buscamos si ese mensaje tiene una foto asociada
             const img = await iManagerPgHandler.returnByProp({
                 key: 'selectImageByMessage',
-                params: params
+                params: [id]
             })
             if (img) {
                 const deleteImage = await iManagerPgHandler.execute({
                     key: 'deleteImage',
-                    params: params
+                    params: [id]
                 })
                 if (!deleteImage) return false;
             }
 
             const modified = await iManagerPgHandler.execute({
                 key: 'deleteMessage',
-                params: params
+                params: [id]
             })
 
             return modified;

@@ -188,18 +188,33 @@ class bill {
       return { error: error.message }
     }
   };
-  getAll = async ({ option, idBill }) => {
+
+
+  getItemsByBill = async ({ id }) => {
+    try {
+      const result = await iManagerPgHandler.executeQuery({
+        key: 'selectAllItemsByBill',
+        params: [id]
+      })
+
+      return result;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  getAll = async ({ option }) => {
     try {
       const optionLower = option.toLowerCase();
       const options = {
         bills: 'selectAllBills',
-        items: 'selectAllItemsByBill'
+        status: 'selectAllStatus',
+        debt: 'selectAllDebts'
       }
       if (!options[optionLower]) return false;
 
       const result = await iManagerPgHandler.executeQuery({
-        key: options[optionLower],
-        params: [idBill]
+        key: 'selectAllBills'
       })
 
       return result;

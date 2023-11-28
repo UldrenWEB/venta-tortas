@@ -145,7 +145,7 @@
   "deleteLocal": "DELETE FROM local.local WHERE id_local = $1 RETURNING id_local",
   "deleteLocalByRoute": "DELETE FROM local.local WHERE id_route = $1",
   "deletePersonLocalByLocal": "DELETE FROM local.person_local WHERE id_local = $1",
-  "updateLocal": "UPDATE local.local SET de_local WHERE id_local = $1",
+  "updateLocal": "UPDATE local.local SET na_local = $2 WHERE id_local = $1",
   "updateRoute": "UPDATE local.route SET de_route WHERE id_route = $1",
   "asignLocalSeller": "INSERT INTO local.person_local ( id_local, id_person) VALUES ($1, $2)",
   "selectAllBills": "SELECT bl.id_bill id, pse.na_person vendedor, pcl.na_person cliente, st.de_status_bill status, bl.da_bill fecha FROM billing.bill bl  INNER JOIN person.person pse ON pse.id_person = bl.id_person_se INNER JOIN person.person pcl ON pcl.id_person = bl.id_person_cl INNER JOIN billing.status_bill st ON st.id_status_bill = bl.id_status_bill",
@@ -187,5 +187,6 @@
   "updateStatusMethodBank": "UPDATE billing.pay_method_bank SET id_status_method = $1 WHERE id_pay_method_bank = $2",
   "updateStatusMethodOther": "UPDATE billing.pay_method_other SET id_status_method = $1 WHERE id_pay_method_other = $2",
   "updateStatusBank": "UPDATE billing.bank SET id_status_method = $1 WHERE id_bank = $2",
-  "insertRowByIdBillAndDeProduct": "INSERT INTO billing.row (id_bill, id_product_sale, am_row) VALUES ( $1, $2, (SELECT ps.am_product_sale FROM sell.product_sale ps WHERE ps.id_product_sale = $2))"
+  "insertRowByIdBillAndDeProduct": "INSERT INTO billing.row (id_bill, id_product_sale, am_row) VALUES ( $1, $2, (SELECT ps.am_product_sale FROM sell.product_sale ps WHERE ps.id_product_sale = $2))",
+  "updateProductSale": "UPDATE sell.product_sale SET id_presentation = COALESCE($1, id_presentation), am_product_sale = COALESCE($2, am_product_sale) WHERE id_product_sale = $3"
 }

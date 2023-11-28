@@ -121,14 +121,14 @@ class control {
    * @param {number} options.idPerson - El ID de la persona a eliminar.
    * @returns {Promise} - Una promesa que resuelve con el resultado de la transacción o un error.
    */
-  deletePerson = async ({ idPerson }) => {
+  deletePerson = async ({ id }) => {
     try {
       const deleteTypePerson = {
         key: "deletePersonTypePerson",
-        params: [idPerson],
+        params: [id],
       };
 
-      const deletePerson = { key: "deletePerson", params: [idPerson] };
+      const deletePerson = { key: "deletePerson", params: [id] };
 
       //TODO: Falta eliminar:
       //* - Persona tipo de pago
