@@ -3,7 +3,7 @@
 import iManagerPgHandler from '../../data/instances/iManagerPgHandler.js'
 
 class Control {
-    getMessageBy = async (option, params) => {
+    getMessageBy = async ({ option, params }) => {
         try {
             const optionLower = option.toLowerCase();
             const obj = {
