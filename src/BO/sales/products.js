@@ -30,6 +30,7 @@ class products {
   //?params: idPresentation, montoEspecifico, rangosDeMonto, mayorQueElMonto, menorQueElMonto
   getAllProductByCondition = async ({ condition, params }) => {
     try {
+      console.log('Aqui params', params);
       const condiLower = condition.toLowerCase();
       const obj = {
         presentation: "selectProductSaleByPresentation",
@@ -45,7 +46,6 @@ class products {
         key: obj[condiLower],
         params: params,
       });
-
       return result;
     } catch (error) {
       return { error: error.message };
@@ -59,6 +59,7 @@ class products {
         key: "selectPresentationByProduct",
         params: [params],
       });
+
       return result;
     } catch (error) {
       return { error: error.message };
@@ -71,7 +72,7 @@ class products {
       const amount = await iManagerPgHandler.returnByProp({
         key: "selectAmountByProduct",
         params: [idProduct],
-        prop: "am_product_sale",
+        prop: 'am_product_sale'
       });
 
       return amount;
@@ -127,8 +128,7 @@ class products {
 
   //*Poner parametros de query en la posicion que se indica abajo
   //?option: product, presentation, amountproduct
-  //?params: idProduct, newDeProduct || idPresentation, newDePresentation || idProduct, idPresentation, newAmoun
-
+  //?params: idProduct, newDeProduct || idPresentation, newDePresentation || idProduct, idPresentation, newAmount
   updateTo = async ({ option, params }) => {
     try {
       const optionLower = option.toLowerCase();

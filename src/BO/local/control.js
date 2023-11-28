@@ -126,11 +126,12 @@ class Control {
 
       if (!obj[toLower]) return false;
 
+      const [id, newName] = params;
       const modified = await iManagerPgHandler.execute({
         key: obj[toLower],
-        params: params,
+        params: [Number(id), newName],
       });
-
+      console.log(modified)
       return modified;
     } catch (error) {
       return { error };

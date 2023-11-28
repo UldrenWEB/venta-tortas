@@ -17,7 +17,7 @@
         "updateProduct": "UPDATE sell.product SET de_product = $2 WHERE id_product = $1",
         "updatePresentation": "UPDATE sell.presentation SET de_presentation = $2 WHERE id_presentation = $1",
         "updateProductSale": "UPDATE sell.product_sale SET id_presentation = COALESCE($1, id_presentation), am_product_sale = COALESCE($2, am_product_sale) WHERE id_product_sale = $3",
-        "updateAmountProductSale": "UPDATE sell.product_sale SET am_product_sale = $3 WHERE id_product = $1 AND id_presentation = $2",
+        "updateAmountProductSale": "UPDATE sell.product_sale SET am_product_sale = $3 WHERE id_product_sale = $1 AND id_presentation = $2",
         "deleteProduct": "DELETE FROM sell.product WHERE id_product = $1 RETURNING id_product",
         "deletePresentation": "DELETE FROM sell.presentation WHERE id_presentation = $1 RETURNING id_presentation",
         "deleteProductSaleByProduct": "DELETE FROM sell.product_sale WHERE id_product = $1",

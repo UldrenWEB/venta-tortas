@@ -57,6 +57,7 @@ class ManagerPgHandler {
         params: params,
       });
       // console.log(command, rows, rowCount)
+      console.log('Query', this.querys[key], 'rowCount', rowCount, 'rows', rows);
       if (command === 'DELETE' || command === 'UPDATE' || command === 'INSERT') {
         return rows;
       }
@@ -80,7 +81,6 @@ class ManagerPgHandler {
         query: this.querys[key],
         params: params,
       });
-
       return result.length > 0 ? result : false;
     } catch (error) {
       console.error(`Ocurrio un error en el metodo executeQuery: ${error.message} del objeto ManagerPgHandler.js`)
