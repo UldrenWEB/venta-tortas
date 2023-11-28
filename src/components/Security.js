@@ -189,11 +189,17 @@ class Security {
 
       // Obtiene el método a ejecutar
       const lowerCaseMethod = method.toLowerCase();
-      const metodoAEjecutar =
+      const methodName =
         Object.keys(obj).find((key) => key.toLowerCase() === lowerCaseMethod) ??
         Object.keys(moduleReady).find(
           (key) => key.toLowerCase() === lowerCaseMethod
         );
+      
+      console.log(`El metodo a ejecutar es: ${methodName}`)
+
+      const metodoAEjecutar = methodName
+        ? obj[methodName] ?? moduleReady[methodName]
+        : undefined;
 
       // Ejecuta el método
       const methodResult = await metodoAEjecutar(
