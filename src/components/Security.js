@@ -149,7 +149,8 @@ class Security {
       try {
         const permiso = this.permissions
           .get(profile)
-          [area][object].map(permission => permission.toLowerCase()).includes(method.toLowerCase());
+          [area][object].map((permission) => permission.toLowerCase())
+          .includes(method.toLowerCase());
         return permiso ? true : false;
       } catch (error) {
         return false;
@@ -187,7 +188,12 @@ class Security {
       const obj = new moduleReady();
 
       // Obtiene el método a ejecutar
-      const metodoAEjecutar = obj[method] ?? moduleReady[method];
+      const lowerCaseMethod = method.toLowerCase();
+      const metodoAEjecutar =
+        Object.keys(obj).find((key) => key.toLowerCase() === lowerCaseMethod) ??
+        Object.keys(moduleReady).find(
+          (key) => key.toLowerCase() === lowerCaseMethod
+        );
 
       // Ejecuta el método
       const methodResult = await metodoAEjecutar(
