@@ -15,31 +15,30 @@ class ManagerDirection {
         const countries = Country.getAllCountries();
 
         //Primero filtramos la lista de paises
-        const result = countries
-          .filter((country) => {
-            //Obtenemos los estados del pais actual
-            const states = State.getStatesOfCountry(country.isoCode);
+        const result = countries.filter((country) => {
+          //Obtenemos los estados del pais actual
+          const states = State.getStatesOfCountry(country.isoCode);
 
-            //Y aqui verificamos si alguno coincide con la busqueda
-            return states.some((state) => {
-              //Si coincide se retorna true
-              if (state.name.toLowerCase() === searchKey) return true;
+          //Y aqui verificamos si alguno coincide con la busqueda
+          return states.some((state) => {
+            //Si coincide se retorna true
+            if (state.name.toLowerCase() === searchKey) return true;
 
-              if (searchField === "city") {
-                //Obtenemos las ciudades del estado actual
-                const cities = City.getCitiesOfState(
-                  country.isoCode,
-                  state.isoCode
-                );
+            if (searchField === "city") {
+              //Obtenemos las ciudades del estado actual
+              const cities = City.getCitiesOfState(
+                country.isoCode,
+                state.isoCode
+              );
 
-                //Aqui verificamos si alguna de las ciudades coincide con la busqueda
-                return cities.some(
-                  (city) => city.name.toLowerCase() === searchKey
-                );
-              }
-              return false;
-            });
-          })
+              //Aqui verificamos si alguna de las ciudades coincide con la busqueda
+              return cities.some(
+                (city) => city.name.toLowerCase() === searchKey
+              );
+            }
+            return false;
+          });
+        })
           .map((country) => country.name);
 
         resolve(result.length > 0 ? result : false);

@@ -49,10 +49,10 @@ class PgHandler {
     await client.query("BEGIN");
 
     try {
-      const { rowCount } = await client.query(query, params);
+      const result = await client.query(query, params);
       await client.query("COMMIT");
 
-      return rowCount;
+      return result;
     } catch (error) {
       return { error };
     } finally {
@@ -69,7 +69,7 @@ class PgHandler {
     try {
       return await this.pool.connect();
     } catch (error) {
-      return { error: error.message};
+      return { error: error.message };
     }
   };
 
@@ -116,7 +116,7 @@ class PgHandler {
         console.log(elemento)
 
         if (id) {
-          finalParams = [id] ; //Aqui tenia ...params, pero lo quite porque daba error.
+          finalParams = [id]; //Aqui tenia ...params, pero lo quite porque daba error.
           if (insertResult) {
             resultAlmacenado = id
             insertResult = null;

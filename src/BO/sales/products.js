@@ -2,10 +2,10 @@
 
 import iManagerPgHandler from "../../data/instances/iManagerPgHandler.js";
 
-class Products {
+class products {
   constructor() { }
 
-  getAll = async ({option}) => {
+  getAll = async ({ option }) => {
     try {
       const optionLower = Array.isArray(option) ? option[0].toLowerCase() : option.toLowerCase();
       const obj = {
@@ -28,7 +28,7 @@ class Products {
 
   //?condition: presentation, amount, range, largerthan, lessthan
   //?params: idPresentation, montoEspecifico, rangosDeMonto, mayorQueElMonto, menorQueElMonto
-  getAllProductByCondition = async (condition, params) => {
+  getAllProductByCondition = async ({ condition, params }) => {
     try {
       const condiLower = condition.toLowerCase();
       const obj = {
@@ -53,13 +53,12 @@ class Products {
   };
 
   //?params: idProduct
-  getAllPresentationByProduct = async (params) => {
+  getAllPresentationByProduct = async ({ params }) => {
     try {
       const result = await iManagerPgHandler.executeQuery({
         key: "selectPresentationByProduct",
-        params: params,
+        params: [params],
       });
-
       return result;
     } catch (error) {
       return { error: error.message };
@@ -67,11 +66,11 @@ class Products {
   };
 
   //?params: idProduct, idPresentation
-  getAmountByProductAndPresentation = async (params) => {
+  getAmountByProductAndPresentation = async ({ idProduct }) => {
     try {
       const amount = await iManagerPgHandler.returnByProp({
-        key: "selectAmountByProductAndPresentation",
-        params: params,
+        key: "selectAmountByProduct",
+        params: [idProduct],
         prop: "am_product_sale",
       });
 
@@ -106,10 +105,31 @@ class Products {
     }
   };
 
+  updateToProductSale = async ({ params }) => {
+    try {
+      //Destrurando params para parsear a null
+      const [presentation, amount, idProduct] = params
+
+      if (presentation == null) presentation = null;
+      if (amount == null) amount = null;
+      if (idProduct == null) idProduct = null;
+
+      const modified = await iManagerPgHandler.execute({
+        key: updateProductSale,
+        params: [presentation, amount, idProduct],
+      });
+
+      return modified;
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
   //*Poner parametros de query en la posicion que se indica abajo
   //?option: product, presentation, amountproduct
-  //?params: idProduct, newDeProduct || idPresentation, newDePresentation || idProduct, idPresentation, newAmount
-  updateTo = async (option, params) => {
+  //?params: idProduct, newDeProduct || idPresentation, newDePresentation || idProduct, idPresentation, newAmoun
+
+  updateTo = async ({ option, params }) => {
     try {
       const optionLower = option.toLowerCase();
       const obj = {
@@ -159,11 +179,11 @@ class Products {
 
   //*Para borrar un producto venta que es delicado tiene que ser con su id de produc_sale
   //?params: idProductSale
-  deleteProductSale = async (params) => {
+  deleteProductSale = async ({ id }) => {
     try {
       const modified = await iManagerPgHandler.execute({
         key: "deleteProductSale",
-        params: params,
+        params: [id],
       });
 
       return modified;
@@ -173,4 +193,4 @@ class Products {
   };
 }
 
-export default Products;
+export default products;
