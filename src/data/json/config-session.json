@@ -10,5 +10,5 @@
     "sameSite": "none"
   },
   "rolling": false,
-  "proxy": true
+  "proxy": true 
 }
