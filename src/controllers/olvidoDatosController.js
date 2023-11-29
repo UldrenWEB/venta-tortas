@@ -7,6 +7,18 @@ import { verifyAnswerQuestion } from "../schemas/userSchema.js";
  * Clase que representa un controlador para la recuperación de datos de usuario.
  */
 class olvidoDatosController {
+
+  static #convertTextHTML = ({ content }) => {
+    const data = `
+    <div style="background-color: #f6f6f6; padding: 20px;">
+      <h1 style="color: #FB5361;">¡Hola!</h1>
+      <p style="color: #2c3e50;">Te hemos asignado una nueva contraseña para tu cuenta.</p>
+      <p style="color: #2c3e50;">Tu nueva contraseña es: <strong>${content}</strong></p>
+      <p style="color: #2c3e50;">¡Gracias!</p>
+    </div>`
+    return data
+  }
+
   /**
    * Método privado para cambiar la contraseña del usuario y enviarla por correo electrónico.
    * @async
@@ -22,7 +34,7 @@ class olvidoDatosController {
       const result = await iMailer.sendMail({
         to: emailUser,
         subject: "Nueva contraseña",
-        text: `Tu nueva contraseña es: ${randomPassword}`,
+        text: this.#convertTextHTML ({ content: randomPassword }),
       });
       if (result.error) return false;
 
@@ -62,7 +74,7 @@ class olvidoDatosController {
   static #verifyQuestions = (req, res) => {
     if (!req.session.questions)
       return res.json({
-        error:
+        errorSession:
           "No estas solicitando recuperar los datos, por lo que no puedes acceder a esta ruta",
       });
     return false;
@@ -111,18 +123,19 @@ class olvidoDatosController {
         const validate =
           (await CryptManager.compararEncriptado({
             dato,
-            hash: hashRespuestas[0].answer,
+            hash: hashRespuestas[0].de_answer,
           })) ||
           (await CryptManager.compararEncriptado({
             dato,
-            hash: hashRespuestas[1].answer,
+            hash: hashRespuestas[1].de_answer,
           }));
 
-        if (!validate)
+        if (!validate) {
           return { error: "Una o ambas respuestas son incorrectas" };
+        }
       }
     } catch (error) {
-      return { error };
+      return { error: error.message };
     }
   };
 
@@ -211,7 +224,8 @@ class olvidoDatosController {
         message: "Responde las preguntas de seguridad usando el POST",
         questions,
       };
-      res.json(objInfo);
+
+      return res.json(objInfo);
     } catch (error) {
       return { error };
     }
@@ -256,7 +270,9 @@ class olvidoDatosController {
           error: "Ha ocurrido un error al cambiar la pass o enviar el correo",
         });
 
-      return res.json({ message: "Se ha enviado un correo con la contraseña" });
+      return res.json({
+        messageSucess: "Se ha enviado un correo con la contraseña",
+      });
     } catch (error) {
       return res.json({
         error: "Error en el servidor",
@@ -294,21 +310,22 @@ class olvidoDatosController {
   static postDesbloquear = async (req, res) => {
     try {
       if (this.#verifySession(req, res)) return;
-    const { user } = req.body;
+      const { user } = req.body;
 
-    if (!user) return res.json({ error: "No ingreso usuario" })
-    
-    if(!(await UserModel.verifyUser({ user }))) return res.json({error: "El usuario no existe"})
+      if (!user) return res.json({ error: "No ingreso usuario" });
 
-    if (!(await UserModel.verifyBlock({ user })))
-      return res.json({ error: `El usuario ${user} no esta bloqueado` });
+      if (!(await UserModel.verifyUser({ user })))
+        return res.json({ error: "El usuario no existe" });
 
-    const infoUser = { questions: [], user };
-    iSession.createSesion({ req, infoUser });
+      if (!(await UserModel.verifyBlock({ user })))
+        return res.json({ error: `El usuario ${user} no esta bloqueado` });
 
-    return res.redirect(303, "/olvidoDatos/cargarPreguntas");
+      const infoUser = { questions: [], user };
+      iSession.createSesion({ req, infoUser });
+
+      return res.redirect(303, "/olvidoDatos/cargarPreguntas");
     } catch (error) {
-      return res.json({error: `Ha ocurrido un error, ${error.message}`})
+      return res.json({ error: `Ha ocurrido un error, ${error.message}` });
     }
   };
 
@@ -345,6 +362,8 @@ class olvidoDatosController {
       return { error };
     }
   };
+
+  
 }
 
 export default olvidoDatosController;

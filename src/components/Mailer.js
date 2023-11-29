@@ -73,7 +73,7 @@ class Mailer {
         from: this.user,
         to,
         subject,
-        text,
+        html : text,
       });
 
       return result;
