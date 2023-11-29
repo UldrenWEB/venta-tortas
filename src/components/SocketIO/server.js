@@ -32,14 +32,14 @@ class SocketServer {
       const server = createServer(app);
       this.io = new Server(server, {
         connectionStateRecovery: {
-          maxDisconnectionDuration: 200000
+          maxDisconnectionDuration: 200000,
         },
         cors: {
           origin: "*",
           methods: ["GET", "POST"],
           allowedHeaders: ["my-custom-header"],
-          credentials: true
-        }
+          credentials: true,
+        },
       });
 
       return server;
@@ -59,7 +59,7 @@ class SocketServer {
   //Los rooms son un arreglo de nombres de los diferentes rooms
   #getRoutes = async () => {
     try {
-      const route = await this.local.getAllOf({of: 'route'});
+      const route = await this.local.getAllOf({ of: "route" });
 
       let arrayRoute = [];
       route.forEach((obj) => {
@@ -185,9 +185,21 @@ class SocketServer {
               option: "messageNames",
               date: date,
             });
-            if (!bool || bool.error) return console.error('Hubo un error al insertar un mensaje en la base de datos', bool.error);
+            if (!bool || bool.error)
+              return console.error(
+                "Hubo un error al insertar un mensaje en la base de datos",
+                bool.error
+              );
 
-            return this.io.to(namespace).except(socket.id).emit("broadcast_message", { contenido: message, usuario: user, fecha: date, emisor: user });
+            return this.io
+              .to(namespace)
+              .except(socket.id)
+              .emit("broadcast_message", {
+                contenido: message,
+                usuario: user,
+                fecha: date,
+                emisor: user,
+              });
           } catch (error) {
             return { error: error.message };
           }
@@ -199,7 +211,7 @@ class SocketServer {
       socket.on("message zone", async (data) => {
         try {
           const rooms = await this.#getRooms();
-          if (!rooms) return console.log('Hubo un error al crear los socket');
+          if (!rooms) return console.log("Hubo un error al crear los socket");
 
           const { room, message } = data;
           const { user } = socket.handshake.query;
@@ -207,21 +219,32 @@ class SocketServer {
 
           console.log(`Envias por el room ${room} el mensaje de ${message}`);
           if (!rooms[room]) {
-            console.log('PASE AQUI')
+            console.log("PASE AQUI");
             return false;
           }
 
           const bool = await this.#iterator({
             userEmit: user,
             map: this.socketJoinRoom,
-            typeMessage: "zone",
+            typeMessage: "by zone",
             message: message,
             option: "messageNames",
             date: date,
           });
-          if (!bool || bool.error) return console.log('Hubo un error al cargar un mensaje en la base de datos', bool.error);
+          if (!bool || bool.error)
+            return console.log(
+              "Hubo un error al cargar un mensaje en la base de datos",
+              bool.error
+            );
 
-          return this.io.to(room).except(socket.id).emit("room_message", { contenido: message, usuario: user, fecha: date });
+          return this.io
+            .to(room)
+            .except(socket.id)
+            .emit("room_message", {
+              contenido: message,
+              usuario: user,
+              fecha: date,
+            });
         } catch (error) {
           return { error: error.message };
         }
@@ -278,12 +301,15 @@ class SocketServer {
   };
   #iterator = async ({ map, userEmit, typeMessage, date, option, message }) => {
     try {
+      console.log("ESTOS SON LOS PARAMETROS DE ITERADOR");
+      console.log(map, userEmit, typeMessage, date, option, message);
+
       const userLower = userEmit.toLowerCase();
       for (let [key, value] of map.entries()) {
         let keyLower = key.toLowerCase();
         //Esto se hace para que no pueda insertar en la base de datos que el mismo que la envio salga que el mismo recibio su mensaje
         if (keyLower !== userLower) {
-          console.log('Pasa a guardar un mensaje en bucle en la base de datos');
+          // console.log('Pasa a guardar un mensaje en bucle en la base de datos');
           const modified = await this.dbMessage.insertTo({
             option: option,
             params: [userLower, keyLower, typeMessage, message, date],
