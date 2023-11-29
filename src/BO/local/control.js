@@ -21,7 +21,7 @@ class Control {
 
       const result = await iManagerPgHandler.executeQuery({
         key: obj[byLower],
-        params: params,
+        params: [params],
       });
 
 

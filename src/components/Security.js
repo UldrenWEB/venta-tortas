@@ -149,7 +149,7 @@ class Security {
       try {
         const permiso = this.permissions
           .get(profile)
-          [area][object].map((permission) => permission.toLowerCase())
+        [area][object].map((permission) => permission.toLowerCase())
           .includes(method.toLowerCase());
         return permiso ? true : false;
       } catch (error) {
@@ -194,9 +194,8 @@ class Security {
         Object.keys(moduleReady).find(
           (key) => key.toLowerCase() === lowerCaseMethod
         );
-      
-      console.log(`El metodo a ejecutar es: ${methodName}`)
 
+      //console.log(`El metodo a ejecutar es: ${methodName}`;
       const metodoAEjecutar = methodName
         ? obj[methodName] ?? moduleReady[methodName]
         : undefined;
@@ -239,21 +238,21 @@ class Security {
       // Establece el permiso en la base de datos
       return status
         ? await this.#addPermission({
-            object,
-            idProfile,
-            idMethod,
-            profile,
-            method,
-            area,
-          })
+          object,
+          idProfile,
+          idMethod,
+          profile,
+          method,
+          area,
+        })
         : await this.#removePermission({
-            object,
-            idProfile,
-            idMethod,
-            profile,
-            method,
-            area,
-          });
+          object,
+          idProfile,
+          idMethod,
+          profile,
+          method,
+          area,
+        });
     } catch (error) {
       return { error };
     }
@@ -356,7 +355,7 @@ class Security {
       // Elimina el permiso del mapa de permisos
       const indiceBorrar = this.permissions
         .get(profile)
-        [area][object].indexOf(method);
+      [area][object].indexOf(method);
 
       if (indiceBorrar === -1) return false;
       this.permissions.get(profile)[area][object].splice(indiceBorrar, 1);

@@ -44,7 +44,7 @@ class products {
 
       const result = await iManagerPgHandler.executeQuery({
         key: obj[condiLower],
-        params: params,
+        params: [params],
       });
       return result;
     } catch (error) {

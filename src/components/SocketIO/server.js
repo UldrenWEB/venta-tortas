@@ -4,7 +4,6 @@ import { Server } from "socket.io";
 import { createServer } from "node:http";
 import Message from "../../BO/messanger/control.js";
 import Control from "../../BO/local/control.js";
-import { error } from "node:console";
 
 //TODO: Aqui se manejaran los mensajes con sus rooms y nameSpaces
 class SocketServer {
@@ -93,8 +92,8 @@ class SocketServer {
     try {
       this.#saveSocket(socket, this.socketMap);
 
-      console.log("Un usuario se acaba de conectar el usuario --", socket.handshake.query.user);
-      console.log('Este es el mapa, ', this.socketMap);
+      // console.log("Un usuario se acaba de conectar el usuario --", socket.handshake.query.user);
+      // console.log('Este es el mapa, ', this.socketMap);
 
       socket.on("file", async (data) => {
         const rooms = await this.#getRooms();
