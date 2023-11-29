@@ -59,7 +59,7 @@ class SocketServer {
   //Los rooms son un arreglo de nombres de los diferentes rooms
   #getRoutes = async () => {
     try {
-      const route = await this.local.getAllOf('route');
+      const route = await this.local.getAllOf({of: 'route'});
 
       let arrayRoute = [];
       route.forEach((obj) => {

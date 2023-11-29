@@ -234,7 +234,7 @@ class bill {
       }
       if (!options[optionLower]) return false;
 
-      const result = await iManagerPgHandler({
+      const result = await iManagerPgHandler.executeQuery({
         key: options[optionLower],
         params: params
       })
