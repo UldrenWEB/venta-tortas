@@ -173,14 +173,14 @@ class Control {
         municipality: "selectAllMuni",
         street: "selectAllStreet",
       };
-  
-  
+
+
       if (!obj[directionLower]) return false;
-  
+
       const result = iManagerPgHandler.executeQuery({
         key: obj[directionLower],
       });
-  
+
       return result;
     } catch (error) {
       return { error: error.message };

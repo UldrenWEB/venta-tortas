@@ -5,7 +5,7 @@
     "selectBillByClient": "SELECT bl.id_bill id, pse.na_person vendedor, st.de_status_bill status, bl.da_bill fecha FROM billing.bill bl  INNER JOIN person.person pse ON pse.id_person = bl.id_person_se INNER JOIN person.person pcl ON pcl.id_person = bl.id_person_cl INNER JOIN billing.status_bill st ON st.id_status_bill = bl.id_status_bill WHERE pcl.na_person LIKE '%$1%'",
     "selectBillsByDate": "SELECT bl.id_bill id, pse.na_person vendedor, pcl.na_person cliente, st.de_status_bill status FROM billing.bill bl  INNER JOIN person.person pse ON pse.id_person = bl.id_person_se INNER JOIN person.person pcl ON pcl.id_person = bl.id_person_cl INNER JOIN billing.status_bill st ON st.id_status_bill = bl.id_status_bill WHERE bl.da_bill = $1",
     "selectBillsByStatus": "SELECT bl.id_bill id, pse.na_person vendedor, pcl.na_person cliente, st.de_status_bill status, bl.da_bill fecha FROM billing.bill bl  INNER JOIN person.person pse ON pse.id_person = bl.id_person_se INNER JOIN person.person pcl ON pcl.id_person = bl.id_person_cl INNER JOIN billing.status_bill st ON st.id_status_bill = bl.id_status_bill WHERE st.de_status_bill = $1",
-    "selectAllStatus": "SELECT id_status_bill, de_status_bill FROM billing.status_bill",
+    "selectAllStatus": "SELECT id_status_bill id, de_status_bill descripcion FROM billing.status_bill",
     "selectTotalByBill": "SELECT rw.id_bill, SUM(rw.am_row) total FROM billing.row rw WHERE rw.id_bill = $1 GROUP BY rw.id_bill ",
     "selectTotalDebt": "SELECT dbt.id_bill idBill, SUM(dbt.am_paid) total FROM billing.debt dbt WHERE dbt.id_bill = $1 GROUP BY dbt.id_bill ",
     "selectTotalPaid": "SELECT id_bill, SUM(am_pay) total FROM billing.pay WHERE id_bill = $1 GROUP BY id_bill",

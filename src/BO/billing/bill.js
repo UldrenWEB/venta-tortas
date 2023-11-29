@@ -192,6 +192,7 @@ class bill {
 
   getItemsByBill = async ({ id }) => {
     try {
+      console.log('Aqui el id', id)
       const result = await iManagerPgHandler.executeQuery({
         key: 'selectAllItemsByBill',
         params: [id]
@@ -214,7 +215,7 @@ class bill {
       if (!options[optionLower]) return false;
 
       const result = await iManagerPgHandler.executeQuery({
-        key: 'selectAllBills'
+        key: options[optionLower]
       })
 
       return result;
@@ -236,7 +237,7 @@ class bill {
 
       const result = await iManagerPgHandler.executeQuery({
         key: options[optionLower],
-        params: params
+        params: [params]
       })
 
       return result;
