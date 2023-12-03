@@ -13,7 +13,7 @@ class Control {
                 type: 'selectMessageByTypeMessage',
                 typeanduser: 'selectMessageByTypeAndUserSe'
             }
-            if (obj[optionLower]) return false;
+            if (!obj[optionLower]) return false;
             const result = await iManagerPgHandler.executeQuery({
                 key: obj[optionLower],
                 params: params

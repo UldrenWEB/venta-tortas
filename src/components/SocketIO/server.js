@@ -177,19 +177,19 @@ class SocketServer {
 
         if (this.namespace === namespace) {
           try {
-            const bool = await this.#iterator({
-              userEmit: user,
-              map: this.socketMap,
-              typeMessage: "broadcast",
-              message: message,
-              option: "messageNames",
-              date: date,
-            });
-            if (!bool || bool.error)
-              return console.error(
-                "Hubo un error al insertar un mensaje en la base de datos",
-                bool.error
-              );
+            // const bool = await this.#iterator({
+            //   userEmit: user,
+            //   map: this.socketMap,
+            //   typeMessage: "broadcast",
+            //   message: message,
+            //   option: "messageNames",
+            //   date: date,
+            // });
+            // if (!bool || bool.error)
+            //   return console.error(
+            //     "Hubo un error al insertar un mensaje en la base de datos",
+            //     bool.error
+            //   );
 
             return this.io
               .to(namespace)
@@ -223,19 +223,19 @@ class SocketServer {
             return false;
           }
 
-          const bool = await this.#iterator({
-            userEmit: user,
-            map: this.socketJoinRoom,
-            typeMessage: "by zone",
-            message: message,
-            option: "messageNames",
-            date: date,
-          });
-          if (!bool || bool.error)
-            return console.log(
-              "Hubo un error al cargar un mensaje en la base de datos",
-              bool.error
-            );
+          // const bool = await this.#iterator({
+          //   userEmit: user,
+          //   map: this.socketJoinRoom,
+          //   typeMessage: "by zone",
+          //   message: message,
+          //   option: "messageNames",
+          //   date: date,
+          // });
+          // if (!bool || bool.error)
+          //   return console.log(
+          //     "Hubo un error al cargar un mensaje en la base de datos",
+          //     bool.error
+          //   );
 
           return this.io
             .to(room)

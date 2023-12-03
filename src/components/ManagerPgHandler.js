@@ -51,17 +51,22 @@ class ManagerPgHandler {
    * @returns {Promise<Boolean>} - Una promesa que resuelve con un booleano indicando si la consulta fue exitosa o un error.
    */
   execute = async ({ key, params }) => {
+
     try {
-      const { command, rows, rowCount } = await this.pgHandler.execute({
+      const result = await this.pgHandler.execute({
         query: this.querys[key],
         params: params,
       });
-      // console.log(command, rows, rowCount)
-      console.log('Query', this.querys[key], 'rowCount', rowCount, 'rows', rows);
-      if (command === 'DELETE' || command === 'UPDATE' || command === 'INSERT') {
-        return rows;
+      
+      console.log(result)
+      
+      if (result.command === 'DELETE' || result.command === 'UPDATE' || result.command === 'INSERT') {
+        console.log(`ENTRO AQUI`)
+        console.log(result.rows)
+        return result.rows;
       }
-      return rowCount > 0;
+
+      return result.rowCount > 0;
     } catch (error) {
       console.error(`Ocurrio un error en el metodo execute: ${error.message} del objeto ManagerPgHandler.js`)
       return { error };

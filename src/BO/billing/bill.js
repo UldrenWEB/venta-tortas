@@ -49,7 +49,7 @@ class bill {
     try {
       console.log('Aqui productos', products)
       //True es que esta pendiente y false que esta pagada
-      const dateNow = this.#getDateNow('mm/dd/yyyy');
+      const dateNow = this.#getDateNow('dd/mm/yyyy');
 
       const statusDe = dateLimit == false ? 'pagada' : 'pendiente'
 
@@ -63,6 +63,8 @@ class bill {
         key: 'insertBill',
         params: [...params, idStatus, dateNow]
       })
+
+
       const idBill = resultId['id_bill']
 
       if (!idBill) return false;
