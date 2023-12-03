@@ -59,7 +59,7 @@ class SocketServer {
   //Los rooms son un arreglo de nombres de los diferentes rooms
   #getRoutes = async () => {
     try {
-      const route = await this.local.getAllOf({ of: "route" });
+      const route = await this.local.getAllOf({ of: 'route' });
 
       let arrayRoute = [];
       route.forEach((obj) => {
@@ -217,9 +217,9 @@ class SocketServer {
           const { user } = socket.handshake.query;
           const date = this.#getDateNow("mm/dd/yyyy");
 
-          console.log(`Envias por el room ${room} el mensaje de ${message}`);
+          // console.log(`Envias por el room ${room} el mensaje de ${message}`);
           if (!rooms[room]) {
-            console.log("PASE AQUI");
+            // console.log('PASE AQUI')
             return false;
           }
 
